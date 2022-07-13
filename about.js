@@ -24,7 +24,7 @@ waitForElm('#content').then((elm) => {
     const para = document.createElement("p");
     
     
-    para.innerHTML = "разширения слепили";
+    para.innerHTML = "Расширение слепили";
     para.className = "flex items-center gap-2 text-white"
     e.appendChild(para);
     addperson(para,"https://visage.surgeplay.com/face/80/266f26f151114cc09f088fd2298df61d","lodo4nik");
