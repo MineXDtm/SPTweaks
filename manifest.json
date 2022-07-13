@@ -10,11 +10,16 @@
   },
 
   "permissions": [
-    "tabs", "<all_urls>"
+    "tabs", "<all_urls>","background"
   ],
 
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "index.html"
+  },
+  "background": {
+    "scripts": ["vizualno_ronunru.js"],
+    "persistent": false
+
   }
 }
