@@ -26,7 +26,7 @@ waitForElm('#content').then((elm) => {
                 event.target.addEventListener( 'DOMNodeInserted', function ( event2 ) {
                     if(  event2.target.className == "h-12 w-12 cursor-pointer rounded-lg") {
                         const para = document.createElement("p");
-                        para.style.color = "orange";
+                        para.style.color = "aqua";
                         para.innerHTML = event2.target.alt;
                         event.target.parentElement.appendChild(para);
                     };
