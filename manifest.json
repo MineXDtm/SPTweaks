@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+
+  "name": "SPTweaks",
+  "description": "Простой твикер для сайта проекта #SPWorlds. Переродился из личного проекта для удаления закрытых дел на суд.",
+  "version": "1.1",
+
+  "icons": {
+    "48": "icon.png"
+  },
+
+  "permissions": [
+    "tabs", "<all_urls>"
+  ],
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "index.html"
+  }
+}
