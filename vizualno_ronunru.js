@@ -1,7 +1,8 @@
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if(changeInfo.status == "complete" && tab.url == "https://spworlds.ru/sp/lawsuits"){
+    if(changeInfo.status == "complete"){
 
+        if(tab.url.includes("https://spworlds.ru") &&  tab.url.includes("lawsuits") && tab.url.length == tab.url.indexOf("lawsuits")+8){
         chrome.tabs.query(
             {
              lastFocusedWindow: true,
@@ -14,7 +15,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                   }); 
             });
     }
-    if(changeInfo.status == "complete" && tab.url == "https://spworlds.ru/sp/about"){
+    if( tab.url.includes("https://spworlds.ru") &&  tab.url.includes("about")){
 
         chrome.tabs.query(
             {
@@ -28,4 +29,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                   }); 
             });
     }
+    }
+    
 }); 
