@@ -19,10 +19,38 @@ function waitForElm(selector) {
 }
 
 waitForElm('#content').then((elm) => {
-    
+    if(document.getElementById('aboutholder')) {
+        return;
+    } else {
+       var pluginHolder = document.createElement('div');
+       pluginHolder.id = "aboutholder";
+       document.body.appendChild(pluginHolder);
+    }
     var e = document.getElementsByClassName("mt-8 space-y-4 ")[0];
     const para = document.createElement("p");
+    var oldHref = document.location.href;
+
+
     
+    
+        var bodyList = document.querySelector("body")
+
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (oldHref != document.location.href) {
+                    oldHref = document.location.href;
+                    document.getElementById('aboutholder').remove();
+                    observer.disconnect();
+                }
+            });
+        });
+        
+        var config = {
+            childList: true,
+            subtree: true
+        };
+        
+        observer.observe(bodyList, config);
     
     para.innerHTML = "Расширение слепили";
     para.className = "flex items-center gap-2 text-white"
