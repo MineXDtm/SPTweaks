@@ -43,7 +43,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                         file: 'about.js'
                     }); 
                 });
-
+            }
         if( tab.url.includes("https://spworlds.ru") &&  tab.url.includes("settings")){
 
             chrome.tabs.query(
@@ -60,4 +60,4 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         }
     }
     
-};})
+});
