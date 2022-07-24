@@ -10,7 +10,7 @@
   },
 
   "permissions": [
-    "tabs","activeTab","<all_urls>"
+    "<all_urls>"
   ],
 
   "browser_action": {
