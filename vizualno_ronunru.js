@@ -1,5 +1,6 @@
 
 tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    
     if(changeInfo.status == "complete"){
         
         if(tab.url.includes("https://spworlds.ru") &&  tab.url.includes("lawsuits")  &&  !tab.url.includes("lawsuits/")){

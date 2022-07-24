@@ -10,7 +10,7 @@
   },
 
   "permissions": [
-    "tabs", "background"
+    "tabs"
   ],
 
   "browser_action": {
