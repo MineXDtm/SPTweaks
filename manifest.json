@@ -10,7 +10,7 @@
   },
 
   "permissions": [
-    "tabs", "<all_urls>","background"
+    "tabs", "background"
   ],
 
   "browser_action": {
@@ -18,8 +18,6 @@
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": ["vizualno_ronunru.js"],
-    "persistent": false
-
+    "scripts": ["vizualno_ronunru.js"]
   }
 }
