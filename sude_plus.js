@@ -35,27 +35,39 @@ function search_player(value){
     var text = value.toLowerCase();
     var paras = document.getElementsByClassName('focusable space-y-1 rounded-3xl border border-white border-opacity-5 bg-gray-500 p-6 font-medium');
     var arr = Array.from(paras);
-    document.getElementById("content").getElementsByClassName("grid")[1].firstChild.addEventListener( 'DOMNodeInserted', async function ( event ) {
+    document.getElementById("content").getElementsByClassName("grid")[1].firstChild.addEventListener( 'DOMNodeInserted',   function ( event ) {
         if(event.target.className == "focusable space-y-1 rounded-3xl border border-white border-opacity-5 bg-gray-500 p-6 font-medium") {
                     
-                    const delay = ms => new Promise(res => setTimeout(res, ms));
-                    await delay(0.1);
-                    var e = event.target.getElementsByClassName("name_MC");
-                    var tag = event.target.firstChild;
-                   
-                    var name =  e[0].innerHTML.replace("Подающий: ","").toLowerCase();
-                    var name2 =e[1].innerHTML.replace("Ответчик: ","").toLowerCase();
-
-                    if(document.getElementById("close").checked){
-                        toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-red text-red");
-                    }
-                    if(document.getElementById("open").checked){
-                        toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-green text-green");
-                    }
-                    if(!name.includes(text) && !name2.includes(text) ){
-                        event.target.style.display = "none";
+            var c = 0;
+            event.target.addEventListener( 'DOMNodeInserted', async function ( event2 ) {
+                
+                if(  event2.target.className == "name_MC") {
+                    c += 1;
+                    if(c == 2){
                         
+                        var e = event.target.getElementsByClassName("name_MC");
+                        var tag = event.target.firstChild;
+                    
+                        var name =  e[0].innerHTML.replace("Подающий: ","").toLowerCase();
+                        var name2 =e[1].innerHTML.replace("Ответчик: ","").toLowerCase();
+
+                        if(document.getElementById("close").checked){
+                            toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-red text-red");
+                        }
+                        if(document.getElementById("open").checked){
+                            toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-green text-green");
+                        }
+                        if(!name.includes(text) && !name2.includes(text) ){
+                            event.target.style.display = "none";
+                            
+                        }
                     }
+                };
+           
+        
+            }, false );
+                    
+                    
                     
                
             
@@ -181,7 +193,7 @@ waitForElm('#content').then((elm) => {
             
             if(event.target.className == "focusable space-y-1 rounded-3xl border border-white border-opacity-5 bg-gray-500 p-6 font-medium") {
                 const delay = ms => new Promise(res => setTimeout(res, ms));
-                await delay(0.1);
+                await delay(1000);
                 window.scrollTo(0, document.body.scrollHeight);
                 
                 
@@ -198,20 +210,36 @@ waitForElm('#content').then((elm) => {
             event.target.style.backgroundColor = "rgb(224 224 224)"
         };
             if(event.target != null && event.target.className == "flex items-center gap-2 pt-2") {
-                    event.target.addEventListener( 'DOMNodeInserted', function ( event2 ) {
-                    if(  event2.target.className == "h-12 w-12 cursor-pointer rounded-lg") {
-                        const para = document.createElement("p");
-                        para.style.color = "aqua";
-                        para.style.backgroundColor = "rgba(0, 255, 255, 0.1)";
-                        para.style.borderRadius = "4px";
-                        para.style.padding = "5px";
-                        para.style.marginTop = "10px";
-                        para.style.marginBottom = "10px";
-                        para.style.width = "fit-content";
-                        para.innerHTML = event2.target.alt;
-                        para.className = "name_MC";
-                        event.target.parentElement.appendChild(para);
-                    };
+                   
+                    var c = 0;
+                    event.target.addEventListener( 'DOMNodeInserted', async function ( event2 ) {
+                        
+                        if(  event2.target.className == "h-12 w-12 rounded-lg") {
+                            c += 1;
+                            const s = c;
+                            
+                            const para = document.createElement("p");
+                            para.style.color = "aqua";
+                            para.style.backgroundColor = "rgba(0, 255, 255, 0.1)";
+                            para.style.borderRadius = "4px";
+                            para.style.padding = "5px";
+                            para.style.marginTop = "10px";
+                            para.style.marginBottom = "10px";
+                            para.style.width = "fit-content";
+                            
+                            const id = await getplayer(event2.target.src.replace("https://visage.surgeplay.com/face/48/",""));
+                            
+                            if(s == 1){
+                                para.innerHTML = "Подающий: " + id.username;
+                               
+                            }
+                            else if(s == 2){
+                                para.innerHTML = "Ответчик: " +  id.username;
+                            }
+                            
+                            para.className = "name_MC";
+                            event.target.parentElement.appendChild(para);
+                        };
                    
                 
                 }, false );
@@ -224,7 +252,12 @@ waitForElm('#content').then((elm) => {
         
     });
 });
-
+function getplayer(playername) {
+    var h = new Headers();
+    return fetch(`https://api.ashcon.app/mojang/v2/user/${playername}`)
+    .then(response => response.json())
+    .then(data => data);
+  }
 
 function closedd(value) {
 
