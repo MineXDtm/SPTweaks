@@ -1,7 +1,6 @@
 
 
 
-
 function waitForElm(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
@@ -206,9 +205,6 @@ waitForElm('#content').then((elm) => {
 
        
     elm.children[2].addEventListener( 'DOMNodeInserted', function ( event ) {
-        if(event.target.className == "focusable space-y-1 rounded-3xl border border-white border-opacity-5 bg-gray-500 p-6 font-medium") {
-            event.target.style.backgroundColor = "rgb(224 224 224)"
-        };
             if(event.target != null && event.target.className == "flex items-center gap-2 pt-2") {
                    
                     var c = 0;
@@ -278,13 +274,6 @@ function closedd(value) {
     document.getElementsByClassName('grid')[1].firstChild.removeEventListener( 'DOMNodeInserted', close_loop);
     var paras = document.getElementsByClassName('rounded-lg bg-opacity-10 p-1 text-center bg-red text-red');
     console.log("tes");
-    
-    
-
-    document.body.style.backgroundColor = "rgb(242 242 242)";
-    document.body.style.color = "rgb(30 30 30)";
-
-
     for(let item of paras) {
         item.parentNode.style.display = "block";
         

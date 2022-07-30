@@ -43,6 +43,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                         file: 'about.js'
                     }); 
                 });
+<<<<<<< HEAD
             }
         if( tab.url.includes("https://spworlds.ru") &&  tab.url.includes("settings")){
 
@@ -61,3 +62,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
     
 });
+=======
+        }
+    }
+    
+}); 
+>>>>>>> parent of c579ec7 (g)
