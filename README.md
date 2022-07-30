@@ -1,6 +1,6 @@
 # SPtweaks
 
-Опенсурс расширение для Chrome **Все браузеры кроме Mozilla Firefox**, способное делать многие вещи с сайтом spworlds.ru.
+Опенсурс расширение для Chrome и FireFox(Mozilla), способное делать многие вещи с сайтом spworlds.ru.
 
 Видео-трейлер - https://www.youtube.com/watch?v=_-h7HS-hyo0
 
