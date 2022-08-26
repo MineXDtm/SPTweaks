@@ -22,7 +22,7 @@ function waitForElm(selector) {
 }
 var searched = false;
 var last_search = "";
-function search_player(value){
+async function search_player(value){
     last_search = value;
     if(value == ""){
         searched = false;
@@ -32,33 +32,29 @@ function search_player(value){
         searched = true;
     }
     var text = value.toLowerCase();
-    var paras = document.getElementsByClassName('focusable space-y-1 rounded-3xl border border-white border-opacity-5 bg-gray-500 p-6 font-medium');
+    var paras = document.getElementsByClassName("focusable space-y-3 rounded-2xl bg-gray-500 p-3 text-lg font-medium");
     var arr = Array.from(paras);
-    document.getElementById("content").getElementsByClassName("grid")[1].firstChild.addEventListener( 'DOMNodeInserted',   function ( event ) {
-        if(event.target.className == "focusable space-y-1 rounded-3xl border border-white border-opacity-5 bg-gray-500 p-6 font-medium") {
-                    
+    document.getElementById("content").getElementsByClassName("grid grid-cols-1 gap-3 pt-2 lg:grid-cols-2 xl:grid-cols-3")[0].addEventListener( 'DOMNodeInserted',   function ( event ) {
+        if(event.target.className == "focusable space-y-3 rounded-2xl bg-gray-500 p-3 text-lg font-medium") {
+            window.scrollTo(0, 0);
             var c = 0;
             event.target.addEventListener( 'DOMNodeInserted', async function ( event2 ) {
                 
-                if(  event2.target.className == "name_MC") {
-                    c += 1;
+                if(  event2.target.className == "flex items-center gap-2 pt-2_") {
+                    c +=1;
                     if(c == 2){
-                        
-                        var e = event.target.getElementsByClassName("name_MC");
+                        const delay = ms => new Promise(res => setTimeout(res, ms));
+                        await delay(1);
+                        var e = event.target.getElementsByClassName("flex items-center gap-2 pt-2_");
                         var tag = event.target.firstChild;
                     
-                        var name =  e[0].innerHTML.replace("Подающий: ","").toLowerCase();
-                        var name2 =e[1].innerHTML.replace("Ответчик: ","").toLowerCase();
+                        var name =  e[0].innerHTML.toLowerCase();
+                        var name2 =e[1].innerHTML.toLowerCase();
 
-                        if(document.getElementById("close").checked){
-                            toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-red text-red");
-                        }
-                        if(document.getElementById("open").checked){
-                            toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-green text-green");
-                        }
+                       
                         if(!name.includes(text) && !name2.includes(text) ){
                             event.target.style.display = "none";
-                            
+                           
                         }
                     }
                 };
@@ -74,9 +70,9 @@ function search_player(value){
     }, false );
     for (let item of arr) {
         
-        var e = item.getElementsByClassName("name_MC");
-        var name =  e[0].innerHTML.replace("Подающий: ","").toLowerCase();
-        var name2 =e[1].innerHTML.replace("Ответчик: ","").toLowerCase();
+        var e = item.getElementsByClassName("flex items-center gap-2 pt-2_");
+        var name =  e[0].innerHTML.toLowerCase();
+        var name2 =e[1].innerHTML.toLowerCase();
         if(!name.includes(text) && !name2.includes(text) ){
             item.style.display = "none";
         }
@@ -84,12 +80,7 @@ function search_player(value){
             item.style.display = "block";
         }
         var tag = item.firstChild;
-        if(document.getElementById("close").checked){
-            toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-red text-red");
-        }
-        if(document.getElementById("open").checked){
-            toclose(tag,"rounded-lg bg-opacity-10 p-1 text-center bg-green text-green");
-        }
+       
     }
 
     
@@ -153,9 +144,7 @@ waitForElm('#content').then((elm) => {
     checker.innerHTML = "<section class='flex items-center gap-2 rounded-2xl bg-gray-700 p-4 text-lg'><input type='checkbox' class='h-5 w-5' id='close'> Скрыть закрытые дела</section> <section class='flex items-center gap-2 rounded-2xl bg-gray-700 p-4 text-lg'><input type='checkbox' class='h-5 w-5' id='open'> Скрыть открытые дела</section>"
 
 
-    elm.appendChild(checker);
-    elm.insertBefore(checker, elm.firstChild);
-
+  
     upbut.innerHTML = "прокрутить на самый верх";
     upbut.style.cursor = "pointer";
     
@@ -166,13 +155,6 @@ waitForElm('#content').then((elm) => {
     });
     elm.appendChild(upbut);
     
-    document.getElementById("close").addEventListener("click", function(){
-        closedd(document.getElementById("close").checked);
-    });
-
-    document.getElementById("open").addEventListener("click", function(){
-        opened(document.getElementById("open").checked);
-    });
 
 
 
@@ -187,10 +169,10 @@ waitForElm('#content').then((elm) => {
     });
     document.getElementById("ld").addEventListener("click", function(){
         window.scrollTo(0, document.body.scrollHeight);
-        elm.children[2].addEventListener( 'DOMNodeInserted', async function ( event ) {
+        elm.children[1].addEventListener( 'DOMNodeInserted', async function ( event ) {
             
             
-            if(event.target.className == "focusable space-y-1 rounded-3xl border border-white border-opacity-5 bg-gray-500 p-6 font-medium") {
+            if(event.target.className == "focusable space-y-3 rounded-2xl bg-gray-500 p-3 text-lg font-medium") {
                 const delay = ms => new Promise(res => setTimeout(res, ms));
                 await delay(1000);
                 window.scrollTo(0, document.body.scrollHeight);
@@ -204,37 +186,33 @@ waitForElm('#content').then((elm) => {
     });
 
        
-    elm.children[2].addEventListener( 'DOMNodeInserted', function ( event ) {
+
+    elm.children[1].addEventListener( 'DOMNodeInserted', function ( event ) {
             if(event.target != null && event.target.className == "flex items-center gap-2 pt-2") {
-                   
+                
                     var c = 0;
                     event.target.addEventListener( 'DOMNodeInserted', async function ( event2 ) {
-                        
-                        if(  event2.target.className == "h-12 w-12 rounded-lg") {
+                       
+                        if(  event2.target.className == "max-w-[6rem] overflow-hidden text-ellipsis text-white") {
+                           
                             c += 1;
                             const s = c;
                             
-                            const para = document.createElement("p");
-                            para.style.color = "aqua";
-                            para.style.backgroundColor = "rgba(0, 255, 255, 0.1)";
-                            para.style.borderRadius = "4px";
-                            para.style.padding = "5px";
-                            para.style.marginTop = "10px";
-                            para.style.marginBottom = "10px";
-                            para.style.width = "fit-content";
                             
-                            const id = await getplayer(event2.target.src.replace("https://visage.surgeplay.com/face/48/",""));
+                            
                             
                             if(s == 1){
-                                para.innerHTML = "Подающий: " + id.username;
+                                event2.target.className = event.target.className.replace("overflow-hidden","") + "_";
+                                event2.target.style.color = "#149A00";
+                                
                                
                             }
                             else if(s == 2){
-                                para.innerHTML = "Ответчик: " +  id.username;
+                                event2.target.className = event.target.className.replace("overflow-hidden","")+ "_";
+                                event2.target.style.color = "#990000";
                             }
                             
-                            para.className = "name_MC";
-                            event.target.parentElement.appendChild(para);
+                            
                         };
                    
                 
