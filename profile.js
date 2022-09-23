@@ -52,7 +52,8 @@ function init(){
 }
 function reload_scene(){
     scene.clear()
-
+    renderer.setSize(512,512)
+    scene.background = null;
     const drl = new THREE.DirectionalLight(0xffffff,0.5);
     drl.position.x = 0;
     drl.position.z = -2;
@@ -164,6 +165,12 @@ async function load_player_p(name,image,pose){
                     b.position.z =  e["translate"][2]/-16;
                       
                 });
+              
+                if(pose === "saul"){
+                    let s = await new THREE.TextureLoader().loadAsync(chrome.runtime.getURL("./saul_bg.png"));
+                    scene.background = s;
+                    renderer.setSize(32,32)
+                }
                 renderer.render(scene,camera);
               
                 image.src = renderer.domElement.toDataURL();
@@ -202,7 +209,7 @@ function changesize(obj){
         obj.style.width = "416px";
     }
 }
-var emotes = ["idle","hello","think",'sad',"facepalm","steven_armstrong","cry"]
+var emotes = ["idle","hello","think",'sad',"facepalm","steven_armstrong","cry","saul"]
 function changevalue(d_input,input){
     if( s_emote !== undefined){
         var parent = s_emote.parentNode;
@@ -331,6 +338,9 @@ waitForElm('#content').then(async (elm) => {
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.src = chrome.runtime.getURL("./loading_emote.png")
                     img.style.userSelect = "none"
+                    img.style.objectFit = "contain"
+                    img.height = "118"
+                    img.width = "118"
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
                         img:img,
@@ -366,7 +376,7 @@ waitForElm('#content').then(async (elm) => {
                 
                 EMOTE_MENU.append(list);
                 EMOTE_MENU.className = "rounded-2xl text-white ";
-                EMOTE_MENU.style.backgroundColor = "#990099";
+                EMOTE_MENU.style.backgroundColor = "#5553C3";
                 EMOTE_MENU.style.height = "200px"
                 changesize(EMOTE_MENU);
                 addEventListener('resize', (event) => {
@@ -403,30 +413,33 @@ waitForElm('#content').then(async (elm) => {
                     else{
                         event.target.textContent =  event.target.textContent.split("<SpTweaks:")[1].split(">")[1]
                     }
-                    const img = document.createElement("img");
-                    img.setAttribute('style','-webkit-user-drag: none')
-                    img.style.width = "200px";
-                    img.style.userSelect = "none"
-                    img.style.height = "200px"
+                   
                     if( event.target.parentElement.className.includes("space-y-4 px-4")){
-                        
+                       
                         needtorender.push({
                             name:document.getElementsByClassName("hidden text-6xl text-white lg:block")[0].textContent,
-                            img:img,
+                            img: document.getElementsByClassName("mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60")[0],
                             pose:emote
                         })
                     }
                     else {
-                    
+                        const img = document.createElement("img");
+                        img.setAttribute('style','-webkit-user-drag: none')
+                        img.style.width = "200px";
+                        img.style.userSelect = "none"
+                        img.style.height = "200px"
+                        img.style.objectFit = "contain"
+                    img.height = "118"
+                    img.width = "118"
                         needtorender.push({
                             name:event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
                             img:img,
                             pose:emote
                         })
-                       
+                         event.target.parentElement.append(img);
                     }
                     
-                    event.target.parentElement.append(img);
+                  
                 }
               
                 
@@ -442,6 +455,7 @@ waitForElm('#content').then(async (elm) => {
             img.setAttribute('style','-webkit-user-drag: none')
             img.style.width = "200px";
             img.style.height = "200px"
+            img.style.objectFit = "contain"
             needtorender.push({
                 name:event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
                 img:img,
@@ -516,9 +530,13 @@ waitForElm('#content').then(async (elm) => {
                 for(var i = 0; i < emotes.length; i++){
                     const obj = document.createElement("div");
                     const img = document.createElement("img");
+                   
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.src = chrome.runtime.getURL("./loading_emote.png")
                     img.style.userSelect = "none"
+                    img.style.objectFit = "contain"
+                    img.height = "118"
+                    img.width = "118"
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
                         img:img,
@@ -529,6 +547,7 @@ waitForElm('#content').then(async (elm) => {
                     EMOTE_MENU.id = "emotes_box";
                     obj.style.display = "inline-block";
                     obj.style.width = "150px";
+                    
                     obj.style.height = "150px";
                     obj.style.marginLeft = "15px";
                     obj.onclick = function(){
@@ -549,7 +568,7 @@ waitForElm('#content').then(async (elm) => {
                 
                 EMOTE_MENU.append(list);
                 EMOTE_MENU.className = "rounded-2xl text-white ";
-                EMOTE_MENU.style.backgroundColor = "#990099";
+                EMOTE_MENU.style.backgroundColor = "#5553C3";
                 EMOTE_MENU.style.height = "200px"
                 changesize(EMOTE_MENU);
                 addEventListener('resize', (event) => {
