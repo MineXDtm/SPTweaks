@@ -13,8 +13,9 @@
     "tabs", "<all_urls>","background"
   ],
   "web_accessible_resources": [
-    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","model.gltf",
-    "poses/idle.json","emote_icon.png","poses/hello.json","poses/steven_armstrong.json","poses/test.json"
+    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","steve.gltf","alex.gltf",
+    "poses/idle.json","emote_icon.png","poses/hello.json","poses/steven_armstrong.json","poses/test.json","poses/think.json","poses/sad.json",
+    "poses/facepalm.json", "poses/cry.json", "loading_emote.png"
  ],
   "browser_action": {
     "default_icon": "icon.png",

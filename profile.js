@@ -24,7 +24,7 @@ let camera;
 
 
 
-
+var needtorender = []
 let renderer;
 var obj;
 function init(){
@@ -33,6 +33,22 @@ function init(){
     renderer  = new THREE.WebGLRenderer({preserveDrawingBuffer:true,  alpha: true });
     renderer.setClearColor( 0x000000, 0 );
     renderer.setSize( 512, 512);
+    (async function main(counter){
+     
+        if(needtorender.length > 0){
+            console.log(needtorender[0])
+            if(needtorender[0].img === undefined){
+               needtorender.shift();
+
+            }
+            else{
+               await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose)
+               needtorender.shift();
+            }
+       }
+        setTimeout(main,0,counter+1);
+    })(0);
+    
 }
 function reload_scene(){
     scene.clear()
@@ -58,10 +74,15 @@ async function load_player_p(name,image,pose){
     var pn = await getplayer2(name);
    
     let loader = new THREE.GLTFLoader();
-    let object = await loader.loadAsync(chrome.runtime.getURL("./model.gltf"));
+    
+    let object;
       
-
-        
+    if(pn.textures.slim){
+        object=  await loader.loadAsync(chrome.runtime.getURL("./alex.gltf"))
+    }
+    else {
+        object=  await loader.loadAsync(chrome.runtime.getURL("./steve.gltf"))
+    }
        
         obj= object;
      
@@ -131,7 +152,7 @@ async function load_player_p(name,image,pose){
                     let b = scene.getObjectByName( e.id );
        
                     if(e["rotate"] !== undefined ){
-                        console.log(e["rotate"] )
+                       
                         b.rotation.x  = THREE.MathUtils.degToRad(e["rotate"][0] ) ;
                         b.rotation.y =  THREE.MathUtils.degToRad(e["rotate"][1] );
                         b.rotation.z = THREE.MathUtils.degToRad(e["rotate"][2] ) ;
@@ -181,7 +202,7 @@ function changesize(obj){
         obj.style.width = "416px";
     }
 }
-var emotes = ["idle","hello","steven_armstrong"]
+var emotes = ["idle","hello","think",'sad',"facepalm","steven_armstrong","cry"]
 function changevalue(d_input,input){
     if( s_emote !== undefined){
         var parent = s_emote.parentNode;
@@ -236,14 +257,18 @@ function changevalue_post(d_input,input){
 var emote_box_used = undefined
 
 waitForElm('#content').then(async (elm) => {
-   
+ 
     init()
     elm.addEventListener( 'DOMNodeInserted',async function ( event ) {
       
      if(event.target.className  === "mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60"){
-         await load_player_p(event.target.src.replace("https://visage.surgeplay.com/front/240/",''),document.getElementsByClassName("mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60")[0],"idle");
+        needtorender.push({
+            name:event.target.src.replace("https://visage.surgeplay.com/front/240/",''),
+            img: event.target,
+            pose:"idle"
+        })
      }
-     else if(event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror")){
+     else if(event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror")  && !location.href.includes("groups")){
         event.target.parentElement.style.display = "none"
        
         var e = document.createElement("input");
@@ -280,7 +305,7 @@ waitForElm('#content').then(async (elm) => {
                 changevalue_post(event.target,e)
             }
             else {
-                if (s !== undefined){
+                if (emote_box_used !== undefined){
                     emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
                     s = undefined;
                 }
@@ -291,12 +316,19 @@ waitForElm('#content').then(async (elm) => {
                 list.style.paddingTop = "25px"
                 list.style.margin = "25px";
                 list.style.overflowX = "scroll";
-              
+                list.style.scrollBehavior = "smooth";
                 for(var i = 0; i < emotes.length; i++){
                     const obj = document.createElement("div");
                     const img = document.createElement("img");
                     img.setAttribute('style','-webkit-user-drag: none')
-                    await load_player_p(document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),img,emotes[i]);
+                    img.src = chrome.runtime.getURL("./loading_emote.png")
+                    
+                    needtorender.push({
+                        name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
+                        img:img,
+                        pose:emotes[i]
+                    })
+ 
                     obj.appendChild(img);
                     obj.className  = "rounded-2xl  bg-gray-300 p-4 text-white ";
                     EMOTE_MENU.id = "emotes_box";
@@ -304,25 +336,29 @@ waitForElm('#content').then(async (elm) => {
                     obj.style.width = "150px";
                     obj.style.height = "150px";
                     obj.style.marginLeft = "15px";
+                    
                     obj.onclick = function(){
                         if(s_emote !== undefined){
                             s_emote.style.borderWidth = "0"; 
                         }
                         s_emote = obj;
-                        
+                       
                         
                         obj.style.borderWidth = "initial";
-                      
                         changevalue_post(event.target,e)
+                       
+                     
+                       
                     }
-                  
                     list.append(obj);
+                    
+                    
                 }
                 
                 
                 EMOTE_MENU.append(list);
                 EMOTE_MENU.className = "rounded-2xl text-white ";
-                EMOTE_MENU.style.backgroundColor = "#b103fc";
+                EMOTE_MENU.style.backgroundColor = "#990099";
                 EMOTE_MENU.style.height = "200px"
                 changesize(EMOTE_MENU);
                 addEventListener('resize', (event) => {
@@ -351,13 +387,35 @@ waitForElm('#content').then(async (elm) => {
                     const emote = event.target.textContent.split("<SpTweaks:")[1].split(">")[0];
                     if(!emotes.includes(emote))return;
                     
-                    event.target.textContent =  event.target.textContent.split("<SpTweaks:")[1].split(">")[1]
+                   
+                    if(event.target.parentElement.className.includes("grow lg:hidden")){
+                        event.target.textContent =  ""
+                        return;
+                    }
+                    else{
+                        event.target.textContent =  event.target.textContent.split("<SpTweaks:")[1].split(">")[1]
+                    }
                     const img = document.createElement("img");
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.style.width = "200px";
                     img.style.height = "200px"
-                   
-                        load_player_p(event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),img,emote)
+                    if( event.target.parentElement.className.includes("space-y-4 px-4")){
+                        
+                        needtorender.push({
+                            name:document.getElementsByClassName("hidden text-6xl text-white lg:block")[0].textContent,
+                            img:img,
+                            pose:emote
+                        })
+                    }
+                    else {
+                    
+                        needtorender.push({
+                            name:event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
+                            img:img,
+                            pose:emote
+                        })
+                       
+                    }
                     
                     event.target.parentElement.append(img);
                 }
@@ -366,7 +424,7 @@ waitForElm('#content').then(async (elm) => {
             })
         }
        else{
-        if(event.target.textContent.includes("<SpTweaks:")){
+        if(event.target.textContent.includes("<SpTweaks:") && !location.href.includes("groups")){
            
             const emote = event.target.textContent.split("<SpTweaks:")[1].split(">")[0];
             if(!emotes.includes(emote))return;
@@ -375,7 +433,12 @@ waitForElm('#content').then(async (elm) => {
             img.setAttribute('style','-webkit-user-drag: none')
             img.style.width = "200px";
             img.style.height = "200px"
-            load_player_p(event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),img,emote)
+            needtorender.push({
+                name:event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
+                img:img,
+                pose:emote
+            })
+           
             event.target.parentElement.append(img);
         }
       
@@ -422,7 +485,7 @@ waitForElm('#content').then(async (elm) => {
                 changevalue(event.target,e)
             }
             else {
-                if (s !== undefined){
+                if (emote_box_used !== undefined){
                     emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
                     s = undefined;
                 }
@@ -433,14 +496,18 @@ waitForElm('#content').then(async (elm) => {
                 list.style.paddingTop = "25px"
                 list.style.margin = "25px";
                 list.style.overflowX = "scroll";
-              
+                list.style.scrollBehavior = "smooth";
                 for(var i = 0; i < emotes.length; i++){
                     const obj = document.createElement("div");
                     const img = document.createElement("img");
                     img.setAttribute('style','-webkit-user-drag: none')
-                    load_player_p(document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),img,emotes[i]);
-                    console.log(document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''));
-                    obj.appendChild(img);
+                    img.src = chrome.runtime.getURL("./loading_emote.png")
+                    needtorender.push({
+                        name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
+                        img:img,
+                        pose:emotes[i]
+                    })
+                    obj.appendChild(img)
                     obj.className  = "rounded-2xl  bg-gray-300 p-4 text-white ";
                     EMOTE_MENU.id = "emotes_box";
                     obj.style.display = "inline-block";
@@ -465,7 +532,7 @@ waitForElm('#content').then(async (elm) => {
                 
                 EMOTE_MENU.append(list);
                 EMOTE_MENU.className = "rounded-2xl text-white ";
-                EMOTE_MENU.style.backgroundColor = "#b103fc";
+                EMOTE_MENU.style.backgroundColor = "#990099";
                 EMOTE_MENU.style.height = "200px"
                 changesize(EMOTE_MENU);
                 addEventListener('resize', (event) => {
