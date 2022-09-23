@@ -48,11 +48,11 @@
 			"part": "LeftArm",
 			"id": "LeftArm",
 			"invertAxis": "xy",
-			"translate": [5, -22, 0],
-			"rotate": [-11.11018, -4.56353, -22.05592],
+			"translate": [7, -22, 0],
+			"rotate": [11.11018, -4.56353, -157.94408],
 			"boxes": [
-				{"coordinates": [-8, 12, -2, 4, 12, 4], "textureOffset": [32, 48]},
-				{"coordinates": [-8, 12, -2, 4, 12, 4], "textureOffset": [48, 48], "sizeAdd": 0.25}
+				{"coordinates": [-10, 12, -2, 4, 12, 4], "textureOffset": [32, 48]},
+				{"coordinates": [-10, 12, -2, 4, 12, 4], "textureOffset": [48, 48], "sizeAdd": 0.25}
 			]
 		},
 		{

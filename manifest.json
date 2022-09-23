@@ -13,7 +13,8 @@
     "tabs", "<all_urls>","background"
   ],
   "web_accessible_resources": [
-    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","model.gltf","poses/idle.json","emote_icon.png"
+    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","model.gltf",
+    "poses/idle.json","emote_icon.png","poses/hello.json","poses/steven_armstrong.json","poses/test.json"
  ],
   "browser_action": {
     "default_icon": "icon.png",

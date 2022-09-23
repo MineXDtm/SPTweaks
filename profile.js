@@ -37,13 +37,14 @@ function init(){
 function reload_scene(){
     scene.clear()
 
-    const drl = new THREE.DirectionalLight(0xffffff,1);
-    drl.position.x = -0.05;
-    drl.position.z = 1;
-    drl.position.y = 1.5;
+    const drl = new THREE.DirectionalLight(0xffffff,0.5);
+    drl.position.x = 0;
+    drl.position.z = -2;
+    drl.position.y = 1;
+    drl.rotation.y = THREE.MathUtils.degToRad(-180);
     drl.castShadow = true;
     scene.add(drl);
-    camera.position.x = -0.05;
+    camera.position.x = 0;
     camera.position.z = 1.1;
     camera.position.y = 1.5;
 
@@ -71,7 +72,7 @@ async function load_player_p(name,image,pose){
                 texture.type = THREE.UnsignedByteType;
                 
                 texture.format = THREE.RGBAFormat;
-                object.scene.rotation.y = Math.PI / 1.2;
+            
                 // in this example we create the material when the texture is loaded
                 object.scene.traverse( function ( child ) {
 
@@ -118,23 +119,24 @@ async function load_player_p(name,image,pose){
                 let pose_json = await getText(pose);
              console.log(pose_json);
              camera.position.x = pose_json.camera.position.x;
-             camera.position.z = pose_json.camera.position.y;
-             camera.position.y = pose_json.camera.position.z;
-             camera.rotation.x = pose_json.camera.rotation.x;
-             camera.rotation.z = pose_json.camera.rotation.y;
-             camera.rotation.y = pose_json.camera.rotation.z;
+             camera.position.z = pose_json.camera.position.z;
+             camera.position.y = pose_json.camera.position.y;
+             camera.rotation.x =THREE.MathUtils.degToRad( pose_json.camera.rotation.x);
+             camera.rotation.z = THREE.MathUtils.degToRad(pose_json.camera.rotation.z);
+             camera.rotation.y = THREE.MathUtils.degToRad(pose_json.camera.rotation.y);
                 pose_json.moves.forEach(function(e){
 
 
 
                     let b = scene.getObjectByName( e.id );
        
-                    if(e["rotate"] !== undefined){
-                        
-                        b.rotation.x = THREE.MathUtils.degToRad(e["rotate"][0]) ;
-                        b.rotation.y= THREE.MathUtils.degToRad(e["rotate"][1] );
-                        b.rotation.z = THREE.MathUtils.degToRad(e["rotate"][2]) ;
+                    if(e["rotate"] !== undefined ){
+                        console.log(e["rotate"] )
+                        b.rotation.x  = THREE.MathUtils.degToRad(e["rotate"][0] ) ;
+                        b.rotation.y =  THREE.MathUtils.degToRad(e["rotate"][1] );
+                        b.rotation.z = THREE.MathUtils.degToRad(e["rotate"][2] ) ;
                     }
+
                  
                     b.position.x =  e["translate"][0]/-16;
                     b.position.y =  e["translate"][1]/-16;
@@ -179,7 +181,7 @@ function changesize(obj){
         obj.style.width = "416px";
     }
 }
-var emotes = ["idle"]
+var emotes = ["idle","hello","steven_armstrong"]
 function changevalue(d_input,input){
     if( s_emote !== undefined){
         var parent = s_emote.parentNode;
@@ -239,7 +241,7 @@ waitForElm('#content').then(async (elm) => {
     elm.addEventListener( 'DOMNodeInserted',async function ( event ) {
       
      if(event.target.className  === "mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60"){
-         load_player_p(event.target.src.replace("https://visage.surgeplay.com/front/240/",''),document.getElementsByClassName("mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60")[0],"idle");
+         await load_player_p(event.target.src.replace("https://visage.surgeplay.com/front/240/",''),document.getElementsByClassName("mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60")[0],"idle");
      }
      else if(event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror")){
         event.target.parentElement.style.display = "none"
@@ -270,7 +272,7 @@ waitForElm('#content').then(async (elm) => {
         event.target.parentElement.parentElement.parentElement.appendChild(b);
       
         b.appendChild(b_icon);
-        b.onclick = function(){
+        b.onclick = async function(){
             if(s === b){
                 emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
                 s= undefined;
@@ -294,7 +296,7 @@ waitForElm('#content').then(async (elm) => {
                     const obj = document.createElement("div");
                     const img = document.createElement("img");
                     img.setAttribute('style','-webkit-user-drag: none')
-                    load_player_p(document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),img,emotes[i]);
+                    await load_player_p(document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),img,emotes[i]);
                     obj.appendChild(img);
                     obj.className  = "rounded-2xl  bg-gray-300 p-4 text-white ";
                     EMOTE_MENU.id = "emotes_box";

@@ -1,0 +1,81 @@
+{"camera":{
+        "position":{
+            "x":0,
+            "y":1,
+            "z":-1.5
+        },
+        "rotation":{
+            "x":-20,
+            "y":-180,
+            "z":0
+        }
+    },
+    "moves": [
+		{
+			"part": "Head",
+			"id": "Head",
+			"invertAxis": "xy",
+			"translate": [0, -11, 0],
+			"rotate": [-6.41151, 4.45916, 175.01232],
+			"boxes": [
+				{"coordinates": [-4.03644, 10.97809, -3.58348, 8, 8, 8], "textureOffset": [0, 0]},
+				{"coordinates": [-4.03644, 10.97809, -3.58348, 8, 8, 8], "textureOffset": [32, 0], "sizeAdd": 0.5}
+			]
+		},
+		{
+			"part": "Body",
+			"id": "Body",
+			"invertAxis": "xy",
+			"translate": [0, -14, 10],
+			"rotate": [-75, 0, 0],
+			"boxes": [
+				{"coordinates": [-4, 2, -12, 8, 12, 4], "textureOffset": [16, 16]},
+				{"coordinates": [-4, 2, -12, 8, 12, 4], "textureOffset": [16, 32], "sizeAdd": 0.25}
+			]
+		},
+		{
+			"part": "RightArm",
+			"id": "RightArm",
+			"invertAxis": "xy",
+			"translate": [-6, -10, 0],
+			"rotate": [169.99067, 2.462, 179.56561],
+			"boxes": [
+				{"coordinates": [5, 0, -2, 4, 12, 4], "textureOffset": [40, 16]},
+				{"coordinates": [5, 0, -2, 4, 12, 4], "textureOffset": [40, 32], "sizeAdd": 0.25}
+			]
+		},
+		{
+			"part": "LeftArm",
+			"id": "LeftArm",
+			"invertAxis": "xy",
+			"translate": [5, -9, 0],
+			"rotate": [-167.82037, 9.7793, -177.90045],
+			"boxes": [
+				{"coordinates": [-8, -1, -2, 4, 12, 4], "textureOffset": [32, 48]},
+				{"coordinates": [-8, -1, -2, 4, 12, 4], "textureOffset": [48, 48], "sizeAdd": 0.25}
+			]
+		},
+		{
+			"part": "RightLeg",
+			"id": "RightLeg",
+			"invertAxis": "xy",
+			"translate": [-1.9, -12, 12],
+			"rotate": [-168.88504, -1.91752, -155.44583],
+			"boxes": [
+				{"coordinates": [0.10555, 0.11382, -12.85515, 4, 12, 4], "textureOffset": [0, 16]},
+				{"coordinates": [0.10555, 0.11382, -12.85515, 4, 12, 4], "textureOffset": [0, 32], "sizeAdd": 0.25}
+			]
+		},
+		{
+			"part": "LeftLeg",
+			"id": "LeftLeg",
+			"invertAxis": "xy",
+			"translate": [1.9, -12, 12],
+			"rotate": [170.45411, -2.99318, 160.74998],
+			"boxes": [
+				{"coordinates": [-4.10622, 0.09475, -15.04189, 4, 12, 4], "textureOffset": [16, 48]},
+				{"coordinates": [-4.10622, 0.09475, -15.04189, 4, 12, 4], "textureOffset": [0, 48], "sizeAdd": 0.25}
+			]
+		}
+	]
+}
