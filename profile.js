@@ -269,6 +269,11 @@ waitForElm('#content').then(async (elm) => {
     elm.addEventListener( 'DOMNodeInserted',async function ( event ) {
       
      if(event.target.className  === "mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60"){
+        
+        event.target.className = "bg-primary rounded-3xl" 
+        event.target.setAttribute('style','-webkit-user-drag: none')
+        event.target.style.userSelect = "none"
+
         needtorender.push({
             name:event.target.src.replace("https://visage.surgeplay.com/front/240/",''),
             img: event.target,
@@ -340,6 +345,7 @@ waitForElm('#content').then(async (elm) => {
                     img.style.userSelect = "none"
                     img.style.objectFit = "contain"
                     img.height = "118"
+                    img.style.borderRadius = "15px"
                     img.width = "118"
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
@@ -415,10 +421,10 @@ waitForElm('#content').then(async (elm) => {
                     }
                    
                     if( event.target.parentElement.className.includes("space-y-4 px-4")){
-                       
+                        
                         needtorender.push({
                             name:document.getElementsByClassName("hidden text-6xl text-white lg:block")[0].textContent,
-                            img: document.getElementsByClassName("mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60")[0],
+                            img: document.getElementsByClassName("bg-primary rounded-3xl")[0],
                             pose:emote
                         })
                     }
@@ -430,6 +436,7 @@ waitForElm('#content').then(async (elm) => {
                         img.style.height = "200px"
                         img.style.objectFit = "contain"
                     img.height = "118"
+                    img.style.borderRadius = "15px"
                     img.width = "118"
                         needtorender.push({
                             name:event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
@@ -456,6 +463,7 @@ waitForElm('#content').then(async (elm) => {
             img.style.width = "200px";
             img.style.height = "200px"
             img.style.objectFit = "contain"
+            img.style.borderRadius = "15px"
             needtorender.push({
                 name:event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
                 img:img,
@@ -537,6 +545,7 @@ waitForElm('#content').then(async (elm) => {
                     img.style.objectFit = "contain"
                     img.height = "118"
                     img.width = "118"
+                    img.style.borderRadius = "15px"
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
                         img:img,
