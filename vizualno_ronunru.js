@@ -1,15 +1,55 @@
 
+
+
+var init = false;
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if(changeInfo.status == "complete"){
+  
+    if(tab.url.includes("https://spworlds.ru")){
+      
+        if(changeInfo.title !== undefined && changeInfo.title.includes("https://") || init == false){
+            init = true;
+            
+            chrome.tabs.query(
+                {
+                 lastFocusedWindow: true,
+                 active: true
+                },
+                async function (tabs)
+                {
+                    
+                     chrome.tabs.executeScript({
+                        file: 'three.js',
+                      });
+                      chrome.tabs.executeScript({
+                        file: 'three.js-master/examples/js/loaders/GLTFLoader.js',
+                      });
+                      chrome.tabs.executeScript({
+                        file: 'profile.js',
+                      }); 
+            
+                });
+           
+        }
         
+      
+       
+    }
+   
+    if(changeInfo.status !== undefined && changeInfo.status === "complete"){
+        
+        // if(tab.url.includes("https://spworlds.ru") && tab.url.includes("users/")){
+        //     chrome.tabs.update(tabId, {url: tab.url});
+        // }
         if(tab.url.includes("https://spworlds.ru") &&  tab.url.includes("lawsuits")  &&  !tab.url.includes("lawsuits/")){
             chrome.tabs.query(
             {
              lastFocusedWindow: true,
              active: true
             },
-            function (tabs)
+            async function (tabs)
             {
+             
+   
                 chrome.tabs.executeScript({
                     file: 'sude_plus.js'
                   }); 
@@ -30,6 +70,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                       }); 
             });
         }
+        
         if( tab.url.includes("https://spworlds.ru") &&  tab.url.includes("about")){
 
             chrome.tabs.query(

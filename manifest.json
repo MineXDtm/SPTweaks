@@ -12,7 +12,9 @@
   "permissions": [
     "tabs", "<all_urls>","background"
   ],
-
+  "web_accessible_resources": [
+    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","model.gltf","poses/idle.json","emote_icon.png"
+ ],
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "index.html"
