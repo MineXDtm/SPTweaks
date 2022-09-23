@@ -27,13 +27,35 @@ let camera;
 var needtorender = []
 let renderer;
 var obj;
-function init(){
+async function serverdata_r(){
+    const server_data = await fetch(`https://api.mcsrvstat.us/2/sp.spworlds.ru`)
+    .then(response => response.json())
+    .then(data => data);
+    console.log( server_data.version)
+    const splash =  document.getElementsByClassName("hidden md:block")[1].textContent
+    document.getElementsByClassName("hidden md:block")[1].textContent = "Онлайн: " + server_data.players.online + " - Версия: " + server_data.version + " //  " + splash;
+    (async function main(counter){
+        if(counter > 1500){
+            
+            counter = 0;
+            const server_data = await fetch(`https://api.mcsrvstat.us/2/sp.spworlds.ru`)
+            .then(response => response.json())
+            .then(data => data);
+            console.log( server_data.version)
+            document.getElementsByClassName("hidden md:block")[1].textContent = "онлайн: " + server_data.players.online + " - версия: " + server_data.version+ "  //  " + splash;
+        }
+        
+        setTimeout(main,0,counter+1);
+    })(0);
+}
+ function init(){
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera( 75,1, 0.1, 1000 );
     renderer  = new THREE.WebGLRenderer({preserveDrawingBuffer:true,  alpha: true });
     renderer.setClearColor( 0x000000, 0 );
     renderer.setSize( 512, 512);
-    (async function main(counter){
+    serverdata_r();
+    (async function main(){
      
         if(needtorender.length > 0){
             console.log(needtorender[0])
@@ -46,7 +68,7 @@ function init(){
                needtorender.shift();
             }
        }
-        setTimeout(main,0,counter+1);
+        setTimeout(main,0);
     })(0);
     
 }
@@ -139,7 +161,7 @@ async function load_player_p(name,image,pose){
                 
                 scene.add(object.scene);
                 let pose_json = await getText(pose);
-             console.log(pose_json);
+          
              camera.position.x = pose_json.camera.position.x;
              camera.position.z = pose_json.camera.position.z;
              camera.position.y = pose_json.camera.position.y;
@@ -209,7 +231,7 @@ function changesize(obj){
         obj.style.width = "416px";
     }
 }
-var emotes = ["idle","hello","think","yey",'sad',"facepalm","steven_armstrong","cry","saul"]
+var emotes = ["idle","hello","think","clap","yey",'sad',"facepalm","steven_armstrong","cry","saul"]
 function changevalue(d_input,input){
     if( s_emote !== undefined){
         var parent = s_emote.parentNode;
@@ -232,7 +254,7 @@ function changevalue(d_input,input){
           
         d_input.dispatchEvent(event);
     }
-    console.log(d_input.value);
+   
    
 }
 function changevalue_post(d_input,input){
@@ -257,31 +279,12 @@ function changevalue_post(d_input,input){
           
         d_input.dispatchEvent(event);
     }
-    console.log(d_input.textContent);
-    console.log(d_input);
+
 }
 
 var emote_box_used = undefined
-
-waitForElm('#content').then(async (elm) => {
- 
-    init()
-    elm.addEventListener( 'DOMNodeInserted',async function ( event ) {
-      
-     if(event.target.className  === "mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60"){
-        
-        event.target.className = "bg-primary rounded-3xl" 
-        event.target.setAttribute('style','-webkit-user-drag: none')
-        event.target.style.userSelect = "none"
-
-        needtorender.push({
-            name:event.target.src.replace("https://visage.surgeplay.com/front/240/",''),
-            img: event.target,
-            pose:"idle"
-        })
-     }
-     else if(event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror")  && !location.href.includes("groups")){
-        event.target.parentElement.style.display = "none"
+function loadPOST(target ){
+    target.parentElement.style.display = "none"
        
         var e = document.createElement("input");
         var b = document.createElement("div");
@@ -301,12 +304,12 @@ waitForElm('#content').then(async (elm) => {
         e.className = "peer w-full border-0 bg-gray-700 text-white caret-primary-lighter outline-none";
         e.minlength = "3";
         e.maxLength = "300"
-        event.target.parentElement.parentNode.appendChild(e);
+        target.parentElement.parentNode.appendChild(e);
         b.style.width = "50px";
      
         b.className = "focusable rounded-full pr-3 transition-colors hover:text-white _";
         
-        event.target.parentElement.parentElement.parentElement.appendChild(b);
+        target.parentElement.parentElement.parentElement.appendChild(b);
       
         b.appendChild(b_icon);
         b.onclick = async function(){
@@ -314,7 +317,7 @@ waitForElm('#content').then(async (elm) => {
                 emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
                 s= undefined;
                 s_emote = undefined;
-                changevalue_post(event.target,e)
+                changevalue_post(target,e)
             }
             else {
                 if (emote_box_used !== undefined   ){
@@ -373,7 +376,7 @@ waitForElm('#content').then(async (elm) => {
                        
                         
                         obj.style.borderWidth = "initial";
-                        changevalue_post(event.target,e)
+                        changevalue_post(target,e)
                        
                      
                        
@@ -396,7 +399,7 @@ waitForElm('#content').then(async (elm) => {
                     
                     
                     changesize(EMOTE_MENU)});
-                event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.appendChild(EMOTE_MENU);
+                target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.appendChild(EMOTE_MENU);
                 emote_box_used = EMOTE_MENU;
                 s = b;
             }
@@ -404,9 +407,35 @@ waitForElm('#content').then(async (elm) => {
         e.oninput = function(){
 
           
-            changevalue_post(event.target,e);
+            changevalue_post(target,e);
            
         }
+}
+waitForElm('#content').then(async (elm) => {
+   
+    init()
+    if(document.getElementsByClassName("ProseMirror").length > 0){
+        loadPOST(document.getElementsByClassName("ProseMirror")[0].firstChild)
+    }
+    elm.addEventListener( 'DOMNodeInserted',async function ( event ) {
+  
+       
+   
+    
+      if(event.target.className  === "mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60"){
+        
+        event.target.className = "bg-primary rounded-3xl" 
+        event.target.setAttribute('style','-webkit-user-drag: none')
+        event.target.style.userSelect = "none"
+
+        needtorender.push({
+            name:event.target.src.replace("https://visage.surgeplay.com/front/240/",''),
+            img: event.target,
+            pose:"idle"
+        })
+     }
+     else if(event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror")  && !location.href.includes("groups")){
+        loadPOST(event.target)
      }
      else if(event.target.nodeName === "P" && !event.target.parentElement.className.includes("ProseMirror") ){
         if(event.target.textContent === ""){

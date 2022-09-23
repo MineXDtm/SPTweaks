@@ -3,7 +3,7 @@
 
   "name": "SPTweaks",
   "description": "Простой твикер для сайта проекта #SPWorlds. Переродился из личного проекта для удаления закрытых дел на суд.",
-  "version": "1.2",
+  "version": "1.3",
 
   "icons": {
     "48": "icon.png"
@@ -15,7 +15,7 @@
   "web_accessible_resources": [
     "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","steve.gltf","alex.gltf",
     "poses/idle.json","emote_icon.png","poses/hello.json","poses/steven_armstrong.json","poses/test.json","poses/think.json","poses/sad.json",
-    "poses/facepalm.json", "poses/cry.json", "poses/yey.json", "poses/saul.json","saul_bg.png", "loading_emote.png"
+    "poses/facepalm.json", "poses/cry.json", "poses/yey.json", "poses/clap.json", "poses/saul.json","saul_bg.png", "loading_emote.png"
  ],
   "browser_action": {
     "default_icon": "icon.png",
