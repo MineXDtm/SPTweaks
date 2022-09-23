@@ -28,7 +28,7 @@
 			"id": "Body",
 			"invertAxis": "xy",
 			"translate": [0, -24, 0],
-			"rotate": [100, 0, 180],
+			"rotate": [-100, 0, 180],
 			"boxes": [
 				{"coordinates": [-4, 12, -2, 8, 12, 4], "textureOffset": [16, 16]},
 				{"coordinates": [-4, 12, -2, 8, 12, 4], "textureOffset": [16, 32], "sizeAdd": 0.25}
