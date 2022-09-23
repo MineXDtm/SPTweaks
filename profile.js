@@ -322,7 +322,7 @@ waitForElm('#content').then(async (elm) => {
                     const img = document.createElement("img");
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.src = chrome.runtime.getURL("./loading_emote.png")
-                    
+                    img.style.userSelect = "none"
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
                         img:img,
@@ -398,6 +398,7 @@ waitForElm('#content').then(async (elm) => {
                     const img = document.createElement("img");
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.style.width = "200px";
+                    img.style.userSelect = "none"
                     img.style.height = "200px"
                     if( event.target.parentElement.className.includes("space-y-4 px-4")){
                         
@@ -502,6 +503,7 @@ waitForElm('#content').then(async (elm) => {
                     const img = document.createElement("img");
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.src = chrome.runtime.getURL("./loading_emote.png")
+                    img.style.userSelect = "none"
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
                         img:img,
