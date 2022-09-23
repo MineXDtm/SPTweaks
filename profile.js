@@ -305,9 +305,17 @@ waitForElm('#content').then(async (elm) => {
                 changevalue_post(event.target,e)
             }
             else {
-                if (emote_box_used !== undefined){
-                    emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
-                    s = undefined;
+                if (emote_box_used !== undefined  ){
+                    if(typeof emote_box_used.parentElement === Node){
+                        emote_box_used = undefined
+                        s = undefined
+                        
+                    }
+                    else{
+                        emote_box_used.parentElement.removeChild(emote_box_used);
+                        s = undefined;
+                    }
+                    
                 }
                 var EMOTE_MENU = document.createElement("div");
               
@@ -486,9 +494,16 @@ waitForElm('#content').then(async (elm) => {
                 changevalue(event.target,e)
             }
             else {
-                if (emote_box_used !== undefined){
-                    emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
-                    s = undefined;
+                if (emote_box_used !== undefined ){
+                    if(typeof emote_box_used.parentElement === Node){
+                        emote_box_used = undefined
+                        s = undefined
+                        
+                    }
+                    else{
+                        emote_box_used.parentElement.removeChild(emote_box_used);
+                        s = undefined;
+                    }
                 }
                 var EMOTE_MENU = document.createElement("div");
               
