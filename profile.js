@@ -209,7 +209,7 @@ function changesize(obj){
         obj.style.width = "416px";
     }
 }
-var emotes = ["idle","hello","think",'sad',"facepalm","steven_armstrong","cry","saul"]
+var emotes = ["idle","hello","think","yey",'sad',"facepalm","steven_armstrong","cry","saul"]
 function changevalue(d_input,input){
     if( s_emote !== undefined){
         var parent = s_emote.parentNode;
@@ -317,15 +317,19 @@ waitForElm('#content').then(async (elm) => {
                 changevalue_post(event.target,e)
             }
             else {
-                if (emote_box_used !== undefined  ){
+                if (emote_box_used !== undefined   ){
                     if(typeof emote_box_used.parentElement === Node){
                         emote_box_used = undefined
                         s = undefined
                         
                     }
-                    else{
+                    else if(emote_box_used.parentElement  != undefined){
                         emote_box_used.parentElement.removeChild(emote_box_used);
                         s = undefined;
+                    }
+                    else{
+                        emote_box_used = undefined
+                        s = undefined
                     }
                     
                 }
@@ -522,9 +526,13 @@ waitForElm('#content').then(async (elm) => {
                         s = undefined
                         
                     }
-                    else{
+                    else if(emote_box_used.parentElement  != undefined){
                         emote_box_used.parentElement.removeChild(emote_box_used);
                         s = undefined;
+                    }
+                    else{
+                        emote_box_used = undefined
+                        s = undefined
                     }
                 }
                 var EMOTE_MENU = document.createElement("div");
