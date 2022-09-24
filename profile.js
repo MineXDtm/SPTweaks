@@ -73,7 +73,7 @@ async function serverdata_r(){
     (async function main(){
      
         if(needtorender.length > 0){
-            console.log(needtorender[0])
+       
             if(needtorender[0].img === undefined){
                needtorender.shift();
 
@@ -266,12 +266,20 @@ function changevalue(d_input,input){
         var parent = s_emote.parentNode;
         
             var index = Array.prototype.indexOf.call(parent.children, s_emote);
-            d_input.value = "<SpTweaks:" + emotes[index] + "> " + input.value
+            d_input.value = "<spts:" + emotes[index] + "> " + input.value
             var event = new Event('input', {
                 bubbles: true,
                 cancelable: true,
             });
-              
+
+            input.maxLength = 300 - ("<spts:" + emotes[index] + "> ").length
+            if(input.value.length > input.maxLength ){
+                
+                
+                input.value = input.value.replace(input.value.substring(input.maxLength),"")
+            
+            }
+        
             d_input.dispatchEvent(event);
     }
     else{
@@ -280,7 +288,7 @@ function changevalue(d_input,input){
             bubbles: true,
             cancelable: true,
         });
-          
+        input.maxLength = 300
         d_input.dispatchEvent(event);
     }
    
@@ -291,12 +299,18 @@ function changevalue_post(d_input,input){
         var parent = s_emote.parentNode;
         
             var index = Array.prototype.indexOf.call(parent.children, s_emote);
-            d_input.textContent = "<SpTweaks:" + emotes[index] + "> " + input.value
+            d_input.textContent = "<spts:" + emotes[index] + "> " + input.value
             var event = new Event('input', {
                 bubbles: true,
                 cancelable: true,
             });
-              
+            input.maxLength = 300 - ("<spts:" + emotes[index] + "> ").length
+            if(input.value.length > input.maxLength ){
+                
+                
+                input.value = input.value.replace(input.value.substring(input.maxLength),"")
+            
+            }
             d_input.dispatchEvent(event);
     }
     else{
@@ -317,6 +331,7 @@ function loadPOST(target ){
        
         var e = document.createElement("input");
         var b = document.createElement("div");
+       
         
         var b_icon= document.createElement("img");
 
@@ -333,19 +348,26 @@ function loadPOST(target ){
         e.className = "peer w-full border-0 bg-gray-700 text-white caret-primary-lighter outline-none";
         e.minlength = "3";
         e.maxLength = "300"
+        var p = document.createElement("p");
+        p.className = "tag_i";
+        p.style.paddingRight = "5px"
+        p.style.color = "darkgray"
+        target.parentElement.parentNode.appendChild(p);
+       
         target.parentElement.parentNode.appendChild(e);
         b.style.width = "50px";
-     
-        b.className = "focusable rounded-full pr-3 transition-colors hover:text-white _";
-        
-        target.parentElement.parentElement.parentElement.appendChild(b);
       
+        b.className = "focusable rounded-full pr-3 transition-colors hover:text-white _";
+        target.parentElement.parentElement.style.display = "inline-flex";
+        target.parentElement.parentElement.parentElement.appendChild(b);
+   
         b.appendChild(b_icon);
         b.onclick = async function(){
             if(s === b){
                 emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
                 s= undefined;
                 s_emote = undefined;
+                p.textContent = "";
                 changevalue_post(target,e)
             }
             else {
@@ -376,6 +398,7 @@ function loadPOST(target ){
                 for(var i = 0; i < emotes.length; i++){
                     const obj = document.createElement("div");
                     const img = document.createElement("img");
+                    const ii = i;
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.src = chrome.runtime.getURL("./loading_emote.png")
                     img.style.userSelect = "none"
@@ -383,6 +406,7 @@ function loadPOST(target ){
                     img.height = "118"
                     img.style.borderRadius = "15px"
                     img.width = "118"
+                    img.title = emotes[i]
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
                         img:img,
@@ -403,7 +427,7 @@ function loadPOST(target ){
                         }
                         s_emote = obj;
                        
-                        
+                        p.textContent = "<spts:" + emotes[ii] + "> ";
                         obj.style.borderWidth = "initial";
                         changevalue_post(target,e)
                        
@@ -466,11 +490,12 @@ waitForElm('#content').then(async (elm) => {
      else if(event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror")  && !location.href.includes("groups")){
         loadPOST(event.target)
      }
-     else if(event.target.nodeName === "P" && !event.target.parentElement.className.includes("ProseMirror") ){
+     else if(event.target.nodeName === "P" && !event.target.parentElement.className.includes("ProseMirror")  &&  event.target.className !== "tag_i"){
+     
         if(event.target.textContent === ""){
             event.target.addEventListener( "DOMSubtreeModified" ,function(){
-                if(event.target.textContent.includes("<SpTweaks:")){
-                    const emote = event.target.textContent.split("<SpTweaks:")[1].split(">")[0];
+                if(event.target.textContent.includes("<spts:")){
+                    const emote = event.target.textContent.split("<spts:")[1].split(">")[0];
                     if(!emotes.includes(emote))return;
                     
                    
@@ -479,7 +504,7 @@ waitForElm('#content').then(async (elm) => {
                         return;
                     }
                     else{
-                        event.target.textContent =  event.target.textContent.split("<SpTweaks:")[1].split(">")[1]
+                        event.target.textContent =  event.target.textContent.split("<spts:")[1].split(">")[1]
                     }
                    
                     if( event.target.parentElement.className.includes("space-y-4 px-4")){
@@ -497,11 +522,14 @@ waitForElm('#content').then(async (elm) => {
                         img.style.userSelect = "none"
                         img.style.height = "200px"
                         img.style.objectFit = "contain"
+                        img.src = chrome.runtime.getURL("./loading_emote.png")
                         img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
                     img.height = "118"
+
                     img.style.borderRadius = "15px"
                     img.title = emote;
                     img.width = "118"
+                    
                         needtorender.push({
                             name:event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
                             img:img,
@@ -517,17 +545,18 @@ waitForElm('#content').then(async (elm) => {
             })
         }
        else{
-        if(event.target.textContent.includes("<SpTweaks:") && !location.href.includes("groups")){
+        if(event.target.textContent.includes("<spts:") && !location.href.includes("groups")){
            
-            const emote = event.target.textContent.split("<SpTweaks:")[1].split(">")[0];
+            const emote = event.target.textContent.split("<spts:")[1].split(">")[0];
             if(!emotes.includes(emote))return;
-            event.target.textContent =  event.target.textContent.split("<SpTweaks:")[1].split(">")[1]
+            event.target.textContent =  event.target.textContent.split("<spts:")[1].split(">")[1]
             const img = document.createElement("img");
             img.setAttribute('style','-webkit-user-drag: none')
             img.style.width = "200px";
             img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
             img.style.height = "200px"
             img.style.objectFit = "contain"
+            img.src = chrome.runtime.getURL("./loading_emote.png")
             img.style.borderRadius = "15px"
             img.title = emote;
             needtorender.push({
@@ -566,6 +595,12 @@ waitForElm('#content').then(async (elm) => {
         e.className = "peer w-full border-0 bg-gray-700 text-white caret-primary-lighter outline-none";
         e.minlength = "3";
         e.maxLength = "300"
+        var p = document.createElement("p");
+        p.className = "tag_i";
+        p.style.paddingRight = "5px"
+        p.style.color = "darkgray"
+        event.target.parentElement.style.display = "inline-flex"
+        event.target.parentElement.appendChild(p);
         event.target.parentElement.appendChild(e);
         b.style.width = "50px";
      
@@ -579,6 +614,7 @@ waitForElm('#content').then(async (elm) => {
                emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
                 s= undefined;
                 s_emote = undefined;
+                p.textContent = "";
                 changevalue(event.target,e)
             }
             else {
@@ -608,13 +644,14 @@ waitForElm('#content').then(async (elm) => {
                 for(var i = 0; i < emotes.length; i++){
                     const obj = document.createElement("div");
                     const img = document.createElement("img");
-                   
+                    const ii = i;
                     img.setAttribute('style','-webkit-user-drag: none')
                     img.src = chrome.runtime.getURL("./loading_emote.png")
                     img.style.userSelect = "none"
                     img.style.objectFit = "contain"
                     img.height = "118"
                     img.width = "118"
+                    img.title = emotes[i]
                     img.style.borderRadius = "15px"
                     needtorender.push({
                         name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
@@ -634,7 +671,7 @@ waitForElm('#content').then(async (elm) => {
                             s_emote.style.borderWidth = "0"; 
                         }
                         s_emote = obj;
-                        
+                        p.textContent = "<spts:" + emotes[ii] + "> "
                         
                         obj.style.borderWidth = "initial";
                       
@@ -669,26 +706,12 @@ waitForElm('#content').then(async (elm) => {
            
         }
      }
-     else if(event.target.className === "focusable rounded-full pr-3 transition-colors hover:text-white" ){
-        event.target.onclick = function(){
-            console.log(event.target.parentElement.firstChild.firstChild.children[1].value.length);
-            if(event.target.parentElement.firstChild.firstChild.children[1].value.length >= 3 && event.target.parentElement.firstChild.firstChild.children[1].value.length <= 300){
-                event.target.parentElement.firstChild.firstChild.children[1].value = ""
-                if (s_emote !== null){
-                   
-                   
-                  
-                    s_emote.parentElement.parentElement.parentElement.removeChild(document.getElementById("emotes_box"));
-                    s_emote = null;
-                }
-            }
-           
-        }
-      
-        //|| event.target.className === "focusable rounded-full transition-colors hover:text-white"
+   
+    
 
-     }
+
     })
+
  
      
  
