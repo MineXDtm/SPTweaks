@@ -31,9 +31,16 @@ async function serverdata_r(){
     const server_data = await fetch(`https://api.mcsrvstat.us/2/sp.spworlds.ru`)
     .then(response => response.json())
     .then(data => data);
-    console.log( server_data.version)
+  
     const splash =  document.getElementsByClassName("hidden md:block")[1].textContent
-    document.getElementsByClassName("hidden md:block")[1].textContent = "Онлайн: " + server_data.players.online + " - Версия: " + server_data.version + " //  " + splash;
+    if(server_data.players !== undefined){
+        const o =  server_data.players.online;
+        const v = server_data.version;
+        if( o !== undefined  && v !== undefined){
+            document.getElementsByClassName("hidden md:block")[1].textContent = "Онлайн: " + o + " - Версия: " + v + " //  " + splash;
+        }
+        
+    }
     (async function main(counter){
         if(counter > 1500){
             
@@ -41,12 +48,20 @@ async function serverdata_r(){
             const server_data = await fetch(`https://api.mcsrvstat.us/2/sp.spworlds.ru`)
             .then(response => response.json())
             .then(data => data);
-            console.log( server_data.version)
-            document.getElementsByClassName("hidden md:block")[1].textContent = "онлайн: " + server_data.players.online + " - версия: " + server_data.version+ "  //  " + splash;
+            if(server_data.players !== undefined){
+                const o =  server_data.players.online;
+                const v = server_data.version;
+                if( o !== undefined  && v !== undefined){
+                    document.getElementsByClassName("hidden md:block")[1].textContent = "Онлайн: " + o + " - Версия: " + v + " //  " + splash;
+                }
+                
+            }
         }
         
         setTimeout(main,0,counter+1);
     })(0);
+  
+  
 }
  function init(){
     scene = new THREE.Scene()
@@ -76,7 +91,7 @@ function reload_scene(){
     scene.clear()
     renderer.setSize(512,512)
     scene.background = null;
-    const drl = new THREE.DirectionalLight(0xffffff,0.5);
+    const drl = new THREE.DirectionalLight(0xffffff,0.55);
     drl.position.x = 0;
     drl.position.z = -2;
     drl.position.y = 1;
@@ -168,12 +183,22 @@ async function load_player_p(name,image,pose){
              camera.rotation.x =THREE.MathUtils.degToRad( pose_json.camera.rotation.x);
              camera.rotation.z = THREE.MathUtils.degToRad(pose_json.camera.rotation.z);
              camera.rotation.y = THREE.MathUtils.degToRad(pose_json.camera.rotation.y);
-                pose_json.moves.forEach(function(e){
-
+                for(var i = 0; i < pose_json.moves.length; i++){
+                    var e = pose_json.moves[i]
 
 
                     let b = scene.getObjectByName( e.id );
-       
+                    if(b === undefined){
+                       var s =   await loader.loadAsync(chrome.runtime.getURL("./decorations/" + e.id + '.gltf' ))
+                    
+                        s.scene.name = "d";
+                
+                        scene.add(s.scene);
+                        b = scene.getObjectByName( e.id );
+                
+
+                    }
+                  
                     if(e["rotate"] !== undefined ){
                        
                         b.rotation.x  = THREE.MathUtils.degToRad(e["rotate"][0] ) ;
@@ -185,14 +210,15 @@ async function load_player_p(name,image,pose){
                     b.position.x =  e["translate"][0]/-16;
                     b.position.y =  e["translate"][1]/-16;
                     b.position.z =  e["translate"][2]/-16;
-                      
-                });
+               
+                }
               
                 if(pose === "saul"){
                     let s = await new THREE.TextureLoader().loadAsync(chrome.runtime.getURL("./saul_bg.png"));
                     scene.background = s;
                     renderer.setSize(32,32)
                 }
+              
                 renderer.render(scene,camera);
               
                 image.src = renderer.domElement.toDataURL();
@@ -231,7 +257,10 @@ function changesize(obj){
         obj.style.width = "416px";
     }
 }
-var emotes = ["idle","hello","think","clap","yey",'sad',"facepalm","steven_armstrong","cry","saul"]
+var emotes = ["idle","hello","think","cute","clap","yey",'sad',"facepalm","steven_armstrong","cryng","saul"]
+
+
+
 function changevalue(d_input,input){
     if( s_emote !== undefined){
         var parent = s_emote.parentNode;
@@ -468,8 +497,10 @@ waitForElm('#content').then(async (elm) => {
                         img.style.userSelect = "none"
                         img.style.height = "200px"
                         img.style.objectFit = "contain"
+                        img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
                     img.height = "118"
                     img.style.borderRadius = "15px"
+                    img.title = emote;
                     img.width = "118"
                         needtorender.push({
                             name:event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
@@ -494,9 +525,11 @@ waitForElm('#content').then(async (elm) => {
             const img = document.createElement("img");
             img.setAttribute('style','-webkit-user-drag: none')
             img.style.width = "200px";
+            img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
             img.style.height = "200px"
             img.style.objectFit = "contain"
             img.style.borderRadius = "15px"
+            img.title = emote;
             needtorender.push({
                 name:event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
                 img:img,
