@@ -73,13 +73,21 @@ async function serverdata_r(){
     (async function main(){
      
         if(needtorender.length > 0){
-       
-            if(needtorender[0].img === undefined){
+          console.log( )
+            if(needtorender[0].img === undefined ||  needtorender[0].img.parentElement == null ||  needtorender[0].img.parentElement != null && typeof needtorender[0].img.parentElement === Node || 
+                needtorender[0].img.parentElement.parentElement == null){
                needtorender.shift();
 
             }
             else{
-               await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose)
+                
+                if(needtorender[0].test == undefined){
+                    await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose)
+                }
+                else{
+                    await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose,needtorender[0].test)
+                }
+             
                needtorender.shift();
             }
        }
@@ -106,7 +114,7 @@ function reload_scene(){
     scene.add(light);
 }
 
-async function load_player_p(name,image,pose){
+async function load_player_p(name,image,pose,test = false){
     
 
     var pn = await getplayer2(name);
@@ -176,11 +184,19 @@ async function load_player_p(name,image,pose){
                 
                 
                 object.scene.name = "p";
-                
+         
                 scene.add(object.scene);
+                let pose_json 
+               if(test == false){
+                if(sticker_data[pose] === undefined) return;
                
-               if(sticker_data[pose] === undefined) return;
-                let pose_json = await sendcors("https://pastebin.com/raw/" + sticker_data[pose].link_id);
+                pose_json = await sendcors("https://pastebin.com/raw/" + sticker_data[pose].link_id);
+               }
+               else{
+                
+                pose_json = await TEST(pose);
+               }
+           
           
              camera.position.x = pose_json.camera.position.x;
              camera.position.z = pose_json.camera.position.z;
@@ -217,14 +233,19 @@ async function load_player_p(name,image,pose){
                     b.position.z =  e["translate"][2]/-16;
                
                 }
-              
+                
                 if(pose === "saul"){
-                    let s = await new THREE.TextureLoader().loadAsync(chrome.runtime.getURL("./saul_bg.png"));
-                    scene.background = s;
+                    scene.background = await new THREE.TextureLoader().loadAsync(chrome.runtime.getURL("./decorations/saul_bg.png") );
+                    
                     image.title = "Лушче Позвони " + pn.username
                     renderer.setSize(32,32)
                 }
-              
+                else if(pose === "i_am_eblan"){
+                    scene.background = await new THREE.TextureLoader().loadAsync(chrome.runtime.getURL("./decorations/i_am_eblan_bg.png"))
+                    
+                    renderer.setSize(64,64);
+                    
+                }
                 renderer.render(scene,camera);
               
                 image.src = renderer.domElement.toDataURL();
@@ -236,7 +257,12 @@ async function load_player_p(name,image,pose){
 }
 
 
-
+function TEST(pose) {
+    var h = new Headers();
+    return fetch(chrome.runtime.getURL("./poses/"+pose+".json"))
+    .then(response => response.json())
+    .then(data => data);
+  }
 
 function getplayer2(playername) {
     var h = new Headers();
@@ -275,13 +301,14 @@ function changevalue(d_input,input){
                 d_input.textContent = "_"
                 return
             };
-            d_input.value = prefix + sticker_data[default_stickers[ii]].symbol  + input.value
+            d_input.value = prefix + sticker_data[default_stickers[index]].symbol  + input.value
             var event = new Event('input', {
                 bubbles: true,
                 cancelable: true,
             });
 
-            input.maxLength = 300 - (prefix + sticker_data[default_stickers[ii]].symbol).length
+            input.maxLength = 300 - (prefix + sticker_data[default_stickers[index]].symbol).length
+            console.log((prefix + sticker_data[default_stickers[index]].symbol).length)
             if(input.value.length > input.maxLength ){
                 
                 
@@ -316,12 +343,12 @@ function changevalue_post(d_input,input){
                 d_input.textContent = "_"
                 return
             };
-            d_input.textContent = prefix + sticker_data[default_stickers[ii]].symbol  + input.value
+            d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol  + input.value
             var event = new Event('input', {
                 bubbles: true,
                 cancelable: true,
             });
-            input.maxLength = 300  - (prefix + sticker_data[default_stickers[ii]].symbol).length
+            input.maxLength = 300  - (prefix + sticker_data[default_stickers[index]].symbol).length
             if(input.value.length > input.maxLength ){
                 
                 
@@ -386,6 +413,9 @@ function loadPOST(target ){
         b.appendChild(b_icon);
         b.onclick = async function(){
             if(s === b){
+                while (emote_box_used.firstChild.lastElementChild) {
+                    emote_box_used.firstChild.removeChild(emote_box_used.firstChild.lastElementChild);
+                  }
                 emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
                 s= undefined;
                 s_emote = undefined;
@@ -401,6 +431,9 @@ function loadPOST(target ){
                         
                     }
                     else if(emote_box_used.parentElement  != undefined){
+                        while (emote_box_used.firstChild.lastElementChild) {
+                            emote_box_used.firstChild.removeChild(emote_box_used.firstChild.lastElementChild);
+                          }
                         emote_box_used.parentElement.removeChild(emote_box_used);
                         s = undefined;
                     }
@@ -492,7 +525,7 @@ function sendcors(url) {
     return new Promise((resolve, reject) => {
         chrome.extension.sendMessage({type:  "CORS_HTTPREQUEST",url:url}, response => {
             if(response) {
-                console.log(response)
+                
                 resolve(response);
             } else {
                 console.log("no response")
@@ -501,8 +534,80 @@ function sendcors(url) {
         });
     });
 }
+function checkforemotes1(event,data,pose){
+    if(event.target.textContent.includes(data)){
+        const emote = pose;
+        
+        
+       
+        if(event.target.parentElement.className.includes("grow lg:hidden")){
+            event.target.textContent =  ""
+            return;
+        }
+        else{
+            event.target.textContent =  event.target.textContent.replace(data,"")
+        }
+       
+        if( event.target.parentElement.className.includes("space-y-4 px-4")){
+           
+            needtorender.push({
+                name:document.getElementsByClassName("hidden text-6xl text-white lg:block")[0].textContent,
+                img: document.getElementsByClassName("bg-primary rounded-3xl")[0],
+                pose:emote
+            })
+        }
+        else {
+            const img = document.createElement("img");
+            img.setAttribute('style','-webkit-user-drag: none')
+            img.style.width = "200px";
+            img.style.userSelect = "none"
+            img.style.height = "200px"
+            img.style.objectFit = "contain"
+            img.src = chrome.runtime.getURL("./loading_emote.png")
+            img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
+        img.height = "118"
+
+        img.style.borderRadius = "15px"
+        img.title =  sticker_data[emote].title
+        img.width = "118"
+        
+            needtorender.push({
+                name:event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
+                img:img,
+                pose:emote
+            })
+             event.target.parentElement.append(img);
+        }
+        
+      
+    }
+}
+function  checkforemotes2(event,data,pose){
+    if(event.target.textContent.includes(data) && !location.href.includes("groups")){
+           
+        const emote = pose;
+       
+        event.target.textContent =  event.target.textContent.replace(data,"")
+        const img = document.createElement("img");
+        img.setAttribute('style','-webkit-user-drag: none')
+        img.style.width = "200px";
+        img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
+        img.style.height = "200px"
+        img.style.objectFit = "contain"
+        img.src = chrome.runtime.getURL("./loading_emote.png")
+        img.style.borderRadius = "15px"
+        img.title =  sticker_data[emote].title
+        needtorender.push({
+            name:event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
+            img:img,
+            pose:emote
+        })
+       
+        event.target.parentElement.append(img);
+        }
+}
 waitForElm('#content').then(async (elm) => {
-  
+    
     var Maininfo = await sendcors(`https://pastebin.com/raw/y4VEvKse`);
     default_stickers = Maininfo.default_stickers;
     sticker_data = Maininfo.sticker_data;
@@ -535,7 +640,7 @@ waitForElm('#content').then(async (elm) => {
         event.target.className = "bg-primary rounded-3xl" 
         event.target.setAttribute('style','-webkit-user-drag: none')
         event.target.style.userSelect = "none"
-
+ 
         needtorender.push({
             name:event.target.src.replace("https://visage.surgeplay.com/front/240/",''),
             img: event.target,
@@ -549,85 +654,20 @@ waitForElm('#content').then(async (elm) => {
      
         if(event.target.textContent === ""){
             event.target.addEventListener( "DOMSubtreeModified" ,function(){
-                Object.keys(sticker_data).forEach(pose => {
-                    
-                    if(event.target.textContent.includes(prefix +  sticker_data[pose].symbol)){
-                        const emote = pose;
-                        
-                        
-                       
-                        if(event.target.parentElement.className.includes("grow lg:hidden")){
-                            event.target.textContent =  ""
-                            return;
-                        }
-                        else{
-                            event.target.textContent =  event.target.textContent.split(prefix + sticker_data[pose].symbol)[1]
-                        }
-                       
-                        if( event.target.parentElement.className.includes("space-y-4 px-4")){
-                           
-                            needtorender.push({
-                                name:document.getElementsByClassName("hidden text-6xl text-white lg:block")[0].textContent,
-                                img: document.getElementsByClassName("bg-primary rounded-3xl")[0],
-                                pose:emote
-                            })
-                        }
-                        else {
-                            const img = document.createElement("img");
-                            img.setAttribute('style','-webkit-user-drag: none')
-                            img.style.width = "200px";
-                            img.style.userSelect = "none"
-                            img.style.height = "200px"
-                            img.style.objectFit = "contain"
-                            img.src = chrome.runtime.getURL("./loading_emote.png")
-                            img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
-                        img.height = "118"
-    
-                        img.style.borderRadius = "15px"
-                        img.title =  sticker_data[emote].title
-                        img.width = "118"
-                        
-                            needtorender.push({
-                                name:event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
-                                img:img,
-                                pose:emote
-                            })
-                             event.target.parentElement.append(img);
-                        }
-                        
-                      
-                    }
-                })
-               
-              
                 
+                Object.keys(sticker_data).forEach(pose => {
+                    checkforemotes1(event,prefix +  sticker_data[pose].symbol,pose)
+                    
+                });
+                //ЕБЕНАЯХУЙНЯ:i_am_eblan
+                checkforemotes1(event,"ЕБЕНАЯХУЙНЯ:i_am_eblan","i_am_eblan")
             })
         }
        else{
         Object.keys(sticker_data).forEach(pose => {
-            if(event.target.textContent.includes(prefix + sticker_data[pose].symbol) && !location.href.includes("groups")){
-           
-            const emote = pose;
-           
-            event.target.textContent =  event.target.textContent.split(prefix + sticker_data[pose].symbol)[1]
-            const img = document.createElement("img");
-            img.setAttribute('style','-webkit-user-drag: none')
-            img.style.width = "200px";
-            img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
-            img.style.height = "200px"
-            img.style.objectFit = "contain"
-            img.src = chrome.runtime.getURL("./loading_emote.png")
-            img.style.borderRadius = "15px"
-            img.title =  sticker_data[emote].title
-            needtorender.push({
-                name:event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
-                img:img,
-                pose:emote
-            })
-           
-            event.target.parentElement.append(img);
-        }
-    })
+            checkforemotes2(event,prefix +  sticker_data[pose].symbol,pose)
+        })
+        checkforemotes2(event,"ЕБЕНАЯХУЙНЯ:i_am_eblan","i_am_eblan")
        }
      }
      else if(event.target.className == "absolute top-1 left-4 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus-visible:top-1 peer-focus-visible:text-sm"){
