@@ -2,6 +2,20 @@
 
 
 var init = false;
+function getinfo(url) {
+    var h = new Headers();
+    return fetch(url)
+    .then(response => response.json())
+    .then(data => data);
+  }
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.type == "CORS_HTTPREQUEST"){
+        var info =  getinfo(request.url).then((response) => {
+            sendResponse(response);
+          });
+    }
+  return true;
+});
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   
     if(tab.url.includes("https://spworlds.ru")){
