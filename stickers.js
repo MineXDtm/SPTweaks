@@ -607,6 +607,10 @@ function  checkforemotes2(event,data,pose){
         }
 }
 waitForElm('#content').then(async (elm) => {
+    document.body.style.backgroundRepeat = "no-repeat"
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center"
+    //document.body.style.backgroundImage = "url("+chrome.runtime.getURL("./backgraund/redbg.jpg")+")";
     
     var Maininfo = await sendcors(`https://pastebin.com/raw/y4VEvKse`);
     default_stickers = Maininfo.default_stickers;

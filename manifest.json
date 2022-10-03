@@ -14,7 +14,7 @@
   ],
   "web_accessible_resources": [
     "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","steve.gltf","alex.gltf",
-    "poses/*","decorations/*","emote_icon.png","saul_bg.png", "loading_emote.png"
+    "poses/*","backgraund/*","decorations/*","emote_icon.png","saul_bg.png", "loading_emote.png"
  ],
   "browser_action": {
     "default_icon": "icon.png",
