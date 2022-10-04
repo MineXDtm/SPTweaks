@@ -1,0 +1,8 @@
+.backgraund_choose{
+    height: 50px;
+    width: 50px;
+    border-radius:25px;
+    margin-right: 10px;
+    background-color: rgba(0, 0, 0,0.1);
+    display: inline-block;
+}

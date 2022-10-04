@@ -82,10 +82,10 @@ async function serverdata_r(){
             else{
                 
                 if(needtorender[0].test == undefined){
-                    await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose)
+                    await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose,needtorender[0].bg)
                 }
                 else{
-                    await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose,needtorender[0].test)
+                    await load_player_p(needtorender[0].name , needtorender[0].img,needtorender[0].pose,needtorender[0].bg,needtorender[0].test)
                 }
              
                needtorender.shift();
@@ -99,22 +99,26 @@ function reload_scene(){
     scene.clear()
     renderer.setSize(512,512)
     scene.background = null;
+    
+    var light = new THREE.AmbientLight(0x404040,2);
+    scene.add(light);
     const drl = new THREE.DirectionalLight(0xffffff,0.55);
     drl.position.x = 0;
     drl.position.z = -2;
     drl.position.y = 1;
+    drl.rotation.x = THREE.MathUtils.degToRad(90);
     drl.rotation.y = THREE.MathUtils.degToRad(-180);
     drl.castShadow = true;
     scene.add(drl);
+    drl.target.position.set(0, -1, 0);
+    scene.add(drl.target);
     camera.position.x = 0;
     camera.position.z = 1.1;
     camera.position.y = 1.5;
 
-    var light = new THREE.AmbientLight(0x404040,2);
-    scene.add(light);
 }
 
-async function load_player_p(name,image,pose,test = false){
+async function load_player_p(name,image,pose,backgraund  = undefined,test = false){
     
 
     var pn = await getplayer2(name);
@@ -184,7 +188,7 @@ async function load_player_p(name,image,pose,test = false){
                 
                 
                 object.scene.name = "p";
-         
+                object.scene.castShadow = true;
                 scene.add(object.scene);
                 let pose_json 
                if(test == false){
@@ -227,7 +231,7 @@ async function load_player_p(name,image,pose,test = false){
                         b.rotation.z = THREE.MathUtils.degToRad(e["rotate"][2] ) ;
                     }
 
-                 
+                    
                     b.position.x =  e["translate"][0]/-16;
                     b.position.y =  e["translate"][1]/-16;
                     b.position.z =  e["translate"][2]/-16;
@@ -246,6 +250,23 @@ async function load_player_p(name,image,pose,test = false){
                     renderer.setSize(64,64);
                     
                 }
+                else{
+                    if(backgraund !== undefined){
+                        var bg =   await loader.loadAsync(chrome.runtime.getURL("./avatar_backgraund/bg_default.gltf" ))
+                        bg.scene.name = "bg";
+                        
+                        scene.add(bg.scene);
+                        let bg_skybox = await new THREE.TextureLoader().loadAsync(chrome.runtime.getURL("./avatar_backgraund/skybox.png"));
+                        scene.background = bg_skybox;
+                    }
+                    
+                }
+               
+                
+                
+                
+                b = scene.getObjectByName( e.id );
+            
                 renderer.render(scene,camera);
               
                 image.src = renderer.domElement.toDataURL();
@@ -383,7 +404,7 @@ function loadPOST(target ){
         
         var b_icon= document.createElement("img");
 
-        b_icon.src= chrome.runtime.getURL("emote_icon.png");
+        b_icon.src= chrome.runtime.getURL("emote_icon.svg");
         b_icon.style.filter = "grayscale(1)";
         b_icon.className = "fill-current p-1 h-8 w-8";
         b.style.display = "flex";
@@ -412,106 +433,10 @@ function loadPOST(target ){
         ID.style.color = "white";
         b.appendChild(b_icon);
         b.onclick = async function(){
-            if(s === b){
-                while (emote_box_used.firstChild.lastElementChild) {
-                    emote_box_used.firstChild.removeChild(emote_box_used.firstChild.lastElementChild);
-                  }
-                emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
-                s= undefined;
-                s_emote = undefined;
-                p.textContent = "";
-                ID.textContent = "";
-                changevalue_post(target,e)
-            }
-            else {
-                if (emote_box_used !== undefined   ){
-                    if(typeof emote_box_used.parentElement === Node){
-                        emote_box_used = undefined
-                        s = undefined
-                        
-                    }
-                    else if(emote_box_used.parentElement  != undefined){
-                        while (emote_box_used.firstChild.lastElementChild) {
-                            emote_box_used.firstChild.removeChild(emote_box_used.firstChild.lastElementChild);
-                          }
-                        emote_box_used.parentElement.removeChild(emote_box_used);
-                        s = undefined;
-                    }
-                    else{
-                        emote_box_used = undefined
-                        s = undefined
-                    }
-                    
-                }
-                var EMOTE_MENU = document.createElement("div");
-              
-                var list = document.createElement("div");
-                list.style.whiteSpace = "nowrap";
-                list.style.paddingTop = "25px"
-                list.style.margin = "25px";
-                list.style.overflowX = "scroll";
-                list.style.scrollBehavior = "smooth";
-                for(var i = 0; i < default_stickers.length; i++){
-                    const obj = document.createElement("div");
-                    const img = document.createElement("img");
-                    const ii = i;
-                    img.setAttribute('style','-webkit-user-drag: none')
-                    img.src = chrome.runtime.getURL("./loading_emote.png")
-                    img.style.userSelect = "none"
-                    img.style.objectFit = "contain"
-                    img.height = "118"
-                    img.style.borderRadius = "15px"
-                    img.width = "118"
-                    img.title =  sticker_data[default_stickers[ii]].title
-                    needtorender.push({
-                        name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
-                        img:img,
-                        pose:default_stickers[i]
-                    })
- 
-                    obj.appendChild(img);
-                    obj.className  = "rounded-2xl  bg-gray-300 p-4 text-white ";
-                    EMOTE_MENU.id = "emotes_box";
-                    obj.style.display = "inline-block";
-                    obj.style.width = "150px";
-                    obj.style.height = "150px";
-                    obj.style.marginLeft = "15px";
-                    
-                    obj.onclick = function(){
-                        if(s_emote !== undefined){
-                            s_emote.style.borderWidth = "0"; 
-                        }
-                        s_emote = obj;
-                       ID.textContent =  "айди: " + default_stickers[ii];
-                        p.textContent = "использываемые символы: " +prefix + sticker_data[default_stickers[ii]].symbol ;
-                        obj.style.borderWidth = "initial";
-                        changevalue_post(target,e)
-                       
-                     
-                       
-                    }
-                    list.append(obj);
-                    
-                    
-                }
-                
-                
-                EMOTE_MENU.append(list);
-                EMOTE_MENU.className = "rounded-2xl text-white ";
-                EMOTE_MENU.style.backgroundColor = "#5553C3";
-                EMOTE_MENU.style.height = "200px"
-                changesize(EMOTE_MENU);
-                addEventListener('resize', (event) => {
-                    if(EMOTE_MENU == undefined){
-                        removeEventListener(this);
-                    }
-                    
-                    
-                    changesize(EMOTE_MENU)});
-                target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.appendChild(EMOTE_MENU);
-                emote_box_used = EMOTE_MENU;
-                s = b;
-            }
+            
+            var pp = target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+            
+            show_emotes_list( pp,target,e,b,p,ID,true);
         }
         e.oninput = function(){
 
@@ -534,6 +459,135 @@ function sendcors(url) {
         });
     });
 }
+
+function show_emotes_list(parent,d_input,c_input,button,symbol_log,id_log,post){
+    if(s === button){
+        emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
+         s= undefined;
+         s_emote = undefined;
+         symbol_log.textContent = "";
+         id_log.textContent =  "";
+         if(!post){
+            changevalue(d_input,c_input)
+         }
+         else{
+            changevalue_post(d_input,c_input);
+         }
+        
+     }
+     else {
+         if (emote_box_used !== undefined ){
+             if(typeof emote_box_used.parentElement === Node){
+                 emote_box_used = undefined
+                 s = undefined
+                 
+             }
+             else if(emote_box_used.parentElement  != undefined){
+                 emote_box_used.parentElement.removeChild(emote_box_used);
+                 s = undefined;
+             }
+             else{
+                 emote_box_used = undefined
+                 s = undefined
+             }
+         }
+         var EMOTE_MENU = document.createElement("div");
+       
+         var list = document.createElement("div");
+         list.style.whiteSpace = "nowrap";
+         list.style.paddingTop = "25px"
+         list.style.margin = "25px";
+         list.style.overflowX = "scroll";
+         list.style.scrollBehavior = "smooth";
+         EMOTE_MENU.id = "emotes_box";
+         for(var i = 0; i < default_stickers.length; i++){
+             const obj = document.createElement("div");
+             const img = document.createElement("img");
+             const ii = i;
+             img.setAttribute('style','-webkit-user-drag: none')
+             img.src = chrome.runtime.getURL("./loading_emote.png")
+             img.style.userSelect = "none"
+             img.style.objectFit = "contain"
+             img.height = "118"
+             img.width = "118"
+             img.title =  sticker_data[default_stickers[ii]].title
+             img.style.borderRadius = "15px"
+             img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)";
+             needtorender.push({
+                 name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
+                 img:img,
+                 pose:default_stickers[ii]
+             })
+             obj.appendChild(img)
+             obj.className  = "rounded-2xl  bg-gray-300 p-4 text-white ";
+             
+             obj.style.display = "inline-block";
+             obj.style.width = "150px";
+             obj.style.backgroundColor = "rgba(0, 0, 0,0.1)";
+             obj.style.height = "150px";
+             obj.style.cursor = "pointer";
+             obj.style.marginLeft = "15px";
+             obj.onclick = function(){
+                 if(s_emote !== undefined){
+                     s_emote.style.borderWidth = "0"; 
+                 }
+                 s_emote = obj;
+                 symbol_log.textContent = "использываемые символы: " +prefix + sticker_data[default_stickers[ii]].symbol ;
+                 id_log.textContent = "айди: " + default_stickers[ii]
+                 obj.style.borderWidth = "initial";
+               
+                if(!post){
+                    changevalue(d_input,c_input)
+                }
+                else{
+                    changevalue_post(d_input,c_input);
+                }
+             }
+           
+             list.append(obj);
+         }
+         
+         var list2 = document.createElement("div");
+         list2.style.whiteSpace = "nowrap";
+         list2.style.paddingTop = "5px"
+         list2.style.margin = "25px";
+         list2.style.overflowX = "scroll";
+         list2.style.scrollBehavior = "smooth";
+         const empty = document.createElement("div");
+         empty.className = "backgraund_choose";
+         const default_bg = document.createElement("div");
+         default_bg.className = "backgraund_choose";
+        
+         list2.appendChild(empty)
+         list2.appendChild(default_bg)
+
+         EMOTE_MENU.append(list);
+         EMOTE_MENU.append(list2);
+         EMOTE_MENU.className = "rounded-2xl text-white ";
+         EMOTE_MENU.style.backgroundColor = "#5553C3";
+         
+         changesize(EMOTE_MENU);
+         addEventListener('resize', (event) => {
+             if(EMOTE_MENU == undefined){
+                 removeEventListener(this);
+             }
+             
+             
+
+             changesize(EMOTE_MENU)});
+             parent.appendChild(EMOTE_MENU);
+             if(post)
+                parent.insertBefore(EMOTE_MENU, d_input.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.nextElementSibling);
+             
+            
+        
+         emote_box_used = EMOTE_MENU;
+         s = button;
+     }
+}
+
+
+
 function checkforemotes1(event,data,pose){
     if(event.target.textContent.includes(data)){
         const emote = pose;
@@ -566,7 +620,7 @@ function checkforemotes1(event,data,pose){
             img.src = chrome.runtime.getURL("./loading_emote.png")
             img.style.filter  = "drop-shadow(0 2px white) drop-shadow(0 -2px white) drop-shadow(2px 0 white) drop-shadow(-2px 0 white)"
         img.height = "118"
-
+        img.style.marginTop = "25px";
         img.style.borderRadius = "15px"
         img.title =  sticker_data[emote].title
         img.width = "118"
@@ -596,6 +650,7 @@ function  checkforemotes2(event,data,pose){
         img.style.objectFit = "contain"
         img.src = chrome.runtime.getURL("./loading_emote.png")
         img.style.borderRadius = "15px"
+        img.style.marginTop = "25px";
         img.title =  sticker_data[emote].title
         needtorender.push({
             name:event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/",""),
@@ -607,11 +662,22 @@ function  checkforemotes2(event,data,pose){
         }
 }
 waitForElm('#content').then(async (elm) => {
-    document.body.style.backgroundRepeat = "no-repeat"
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundPosition = "center"
-    //document.body.style.backgroundImage = "url("+chrome.runtime.getURL("./backgraund/redbg.jpg")+")";
-    
+    var link = document.createElement("link");
+    link.href = chrome.extension.getURL("./styles/sptweaks_default_style.css");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    document.getElementsByTagName("head")[0].appendChild(link);
+    let bg_i = document.createElement("div");
+    //bg_i.style.backgroundImage = "url("+chrome.runtime.getURL("./backgraund/19a27b959db7c85cff4506708e21be13.jpg")+")";
+    bg_i.style.position = "fixed";
+    bg_i.style.height = "100vh";
+    bg_i.style.backgroundRepeat = "no-repeat";
+    bg_i.style.backgroundSize = "cover";
+    bg_i.style.width = "100vw";
+    bg_i.style.zIndex = "-1";
+   
+    document.body.appendChild(bg_i);
+    document.body.insertBefore(bg_i,document.body.firstChild);
     var Maininfo = await sendcors(`https://pastebin.com/raw/y4VEvKse`);
     default_stickers = Maininfo.default_stickers;
     sticker_data = Maininfo.sticker_data;
@@ -686,11 +752,11 @@ waitForElm('#content').then(async (elm) => {
         
         var b_icon= document.createElement("img");
 
-        b_icon.src= chrome.runtime.getURL("emote_icon.png");
+        b_icon.src= chrome.runtime.getURL("emote_icon.svg");
         b_icon.style.filter = "grayscale(1)";
         b_icon.className = "fill-current p-1 h-8 w-8";
         b.style.display = "flex";
-        b.style.marginTop = "10px";
+        b_icon.style.height = "auto";
         b_icon.style.justifyContent = "center";
         b_icon.style.userSelect = "none";
         b_icon.style.pointerEvents =  "none";
@@ -708,102 +774,15 @@ waitForElm('#content').then(async (elm) => {
         event.target.parentElement.appendChild(p);
         event.target.parentElement.appendChild(e);
         b.style.width = "50px";
-        
+        b.style.height = "auto";
+        b.style.alignContent = "center";
         b.className = "focusable rounded-full pr-3 transition-colors hover:text-white _";
         event.target.parentElement.parentElement.parentElement.parentElement.appendChild(ID);
         event.target.parentElement.parentElement.parentElement.appendChild(b);
       
         b.appendChild(b_icon);
         b.onclick = function(){
-            if(s === b){
-               emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
-                s= undefined;
-                s_emote = undefined;
-                p.textContent = "";
-                ID.textContent =  "";
-                changevalue(event.target,e)
-            }
-            else {
-                if (emote_box_used !== undefined ){
-                    if(typeof emote_box_used.parentElement === Node){
-                        emote_box_used = undefined
-                        s = undefined
-                        
-                    }
-                    else if(emote_box_used.parentElement  != undefined){
-                        emote_box_used.parentElement.removeChild(emote_box_used);
-                        s = undefined;
-                    }
-                    else{
-                        emote_box_used = undefined
-                        s = undefined
-                    }
-                }
-                var EMOTE_MENU = document.createElement("div");
-              
-                var list = document.createElement("div");
-                list.style.whiteSpace = "nowrap";
-                list.style.paddingTop = "25px"
-                list.style.margin = "25px";
-                list.style.overflowX = "scroll";
-                list.style.scrollBehavior = "smooth";
-                for(var i = 0; i < default_stickers.length; i++){
-                    const obj = document.createElement("div");
-                    const img = document.createElement("img");
-                    const ii = i;
-                    img.setAttribute('style','-webkit-user-drag: none')
-                    img.src = chrome.runtime.getURL("./loading_emote.png")
-                    img.style.userSelect = "none"
-                    img.style.objectFit = "contain"
-                    img.height = "118"
-                    img.width = "118"
-                    img.title =  sticker_data[default_stickers[ii]].title
-                    img.style.borderRadius = "15px"
-                    needtorender.push({
-                        name:document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/",''),
-                        img:img,
-                        pose:default_stickers[ii]
-                    })
-                    obj.appendChild(img)
-                    obj.className  = "rounded-2xl  bg-gray-300 p-4 text-white ";
-                    EMOTE_MENU.id = "emotes_box";
-                    obj.style.display = "inline-block";
-                    obj.style.width = "150px";
-                    
-                    obj.style.height = "150px";
-                    obj.style.marginLeft = "15px";
-                    obj.onclick = function(){
-                        if(s_emote !== undefined){
-                            s_emote.style.borderWidth = "0"; 
-                        }
-                        s_emote = obj;
-                        p.textContent = "использываемые символы: " +prefix + sticker_data[default_stickers[ii]].symbol ;
-                        ID.textContent = "айди: " + default_stickers[ii]
-                        obj.style.borderWidth = "initial";
-                      
-                        changevalue(event.target,e)
-                    }
-                  
-                    list.append(obj);
-                }
-                
-                
-                EMOTE_MENU.append(list);
-                EMOTE_MENU.className = "rounded-2xl text-white ";
-                EMOTE_MENU.style.backgroundColor = "#5553C3";
-                EMOTE_MENU.style.height = "200px"
-                changesize(EMOTE_MENU);
-                addEventListener('resize', (event) => {
-                    if(EMOTE_MENU == undefined){
-                        removeEventListener(this);
-                    }
-                    
-                    
-                    changesize(EMOTE_MENU)});
-                event.target.parentElement.parentElement.parentElement.parentElement.appendChild(EMOTE_MENU);
-                emote_box_used = EMOTE_MENU;
-                s = b;
-            }
+           show_emotes_list( event.target.parentElement.parentElement.parentElement.parentElement,event.target,e,b,p,ID,false);
         }
         e.oninput = function(){
 

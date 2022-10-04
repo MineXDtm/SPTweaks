@@ -37,6 +37,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                       chrome.tabs.executeScript({
                         file: 'three.js-master/examples/js/loaders/GLTFLoader.js',
                       });
+                    
                       chrome.tabs.executeScript({
                         file: 'stickers.js',
                       }); 
