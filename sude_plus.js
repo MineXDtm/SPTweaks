@@ -184,8 +184,8 @@ waitForElm('#content').then((elm) => {
     });
 
        
+
     elm.children[1].addEventListener( 'DOMNodeInserted', function ( event ) {
-        
             if(event.target != null && event.target.className == "flex items-center gap-2 pt-2") {
                 
                     var c = 0;

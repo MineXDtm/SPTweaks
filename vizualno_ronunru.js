@@ -37,8 +37,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                       chrome.tabs.executeScript({
                         file: 'three.js-master/examples/js/loaders/GLTFLoader.js',
                       });
+                    
                       chrome.tabs.executeScript({
-                        file: 'profile.js',
+                        file: 'stickers.js',
                       }); 
             
                 });
@@ -98,21 +99,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                         file: 'about.js'
                     }); 
                 });
-            }
-        if( tab.url.includes("https://spworlds.ru") &&  tab.url.includes("settings")){
 
-            chrome.tabs.query(
-                {
-                lastFocusedWindow: true,
-                active: true
-                },
-                function (tabs)
-                {
-                    chrome.tabs.executeScript({
-                        file: 'options.js'
-                    }); 
-                });
         }
     }
     
-});
+}); 
+
