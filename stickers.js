@@ -500,7 +500,7 @@ function choose_backgraund(backgraund,b ){
         bg_b = undefined;
     }
     b.style.borderColor  = "white";
-    b.style.borderWidth = "5px";
+    b.style.borderWidth = "2px";
     bg_c = backgraund;
     bg_b = b;
 
@@ -522,6 +522,8 @@ function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
          s_emote = undefined;
          symbol_log.textContent = "";
          id_log.textContent =  "";
+         bg_b = undefined;
+         bg_c = undefined;
          update_i()
         
      }
@@ -530,11 +532,15 @@ function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
              if(typeof emote_box_used.parentElement === Node){
                  emote_box_used = undefined
                  s = undefined
+                 bg_b = undefined;
+                bg_c = undefined;
                  
              }
              else if(emote_box_used.parentElement  != undefined){
                  emote_box_used.parentElement.removeChild(emote_box_used);
                  s = undefined;
+                 bg_b = undefined;
+                 bg_c = undefined;
              }
              else{
                  emote_box_used = undefined
@@ -613,6 +619,7 @@ function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
             choose_backgraund(undefined,empty)
             update_i()
          };
+         choose_backgraund(undefined,empty)
          const default_bg = document.createElement("div");
          default_bg.className = "backgraund_choose";
          default_bg.onclick = function(){
