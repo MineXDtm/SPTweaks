@@ -622,6 +622,7 @@ function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
          choose_backgraund(undefined,empty)
          const default_bg = document.createElement("div");
          default_bg.className = "backgraund_choose";
+         default_bg.style.backgroundImage ="url("+ chrome.runtime.getURL("./avatar_backgraund/skybox.png")+")";
          default_bg.onclick = function(){
             choose_backgraund("🟪",default_bg)
             update_i()
