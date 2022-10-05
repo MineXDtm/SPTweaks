@@ -313,16 +313,29 @@ var sticker_data = {
  
 }
 
-function changevalue(d_input,input){
+function changevalue(d_input,input,symbol_log){
+   
     if( s_emote !== undefined){
+    
         var parent = s_emote.parentNode;
             
             var index = Array.prototype.indexOf.call(parent.children, s_emote);
+            symbolinfo_update(symbol_log,index);
             if( input.value.length <3){
-                d_input.textContent = "_"
-                return
+                d_input.textContent = "_";
+                return;
             };
-            d_input.value = prefix + sticker_data[default_stickers[index]].symbol  + input.value
+            if(bg_c != undefined){
+                d_input.value  = prefix + sticker_data[default_stickers[index]].symbol +  "" + bg_c + input.value;
+                
+                console.log(symbol_log)
+            }
+            else{
+                d_input.value = prefix + sticker_data[default_stickers[index]].symbol  + input.value;
+                console.log(symbol_log)
+               
+            }
+           
             var event = new Event('input', {
                 bubbles: true,
                 cancelable: true,
@@ -355,16 +368,35 @@ function changevalue(d_input,input){
    
    
 }
-function changevalue_post(d_input,input){
+function symbolinfo_update(symbol_log,index){
+    if(bg_c != undefined){
+        symbol_log.textContent = "использываемые символы: " +prefix + sticker_data[default_stickers[index]].symbol+  "" + bg_c;
+    }
+    else{
+        symbol_log.textContent = "использываемые символы: " +prefix + sticker_data[default_stickers[index]].symbol;
+    }
+}
+function changevalue_post(d_input,input,symbol_log){
     if( s_emote !== undefined){
         var parent = s_emote.parentNode;
 
             var index = Array.prototype.indexOf.call(parent.children, s_emote);
+            symbolinfo_update(symbol_log,index);
             if( input.value.length <3){
                 d_input.textContent = "_"
                 return
             };
-            d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol  + input.value
+
+            
+            if(bg_c != undefined){
+                d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol+"" + bg_c  + input.value;
+               
+            }
+            else{
+                d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol  + input.value;
+               
+                
+            }
             var event = new Event('input', {
                 bubbles: true,
                 cancelable: true,
@@ -441,7 +473,7 @@ function loadPOST(target ){
         e.oninput = function(){
 
           
-            changevalue_post(target,e);
+            changevalue_post(target,e,p);
            
         }
 }
@@ -459,23 +491,38 @@ function sendcors(url) {
         });
     });
 }
-function choose_backgraund(){
+var bg_c = undefined;
+var bg_b = undefined;
+function choose_backgraund(backgraund,b ){
+    console.log(backgraund)
+    if(bg_b != undefined){
+        bg_b.style.borderWidth = "0px";
+        bg_b = undefined;
+    }
+    b.style.borderColor  = "white";
+    b.style.borderWidth = "5px";
+    bg_c = backgraund;
+    bg_b = b;
+
 
 }
 function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
     var id_log = document.createElement("p");
+    function update_i(){
+        if(!post){
+            changevalue(d_input,c_input,symbol_log)
+        }
+        else{
+            changevalue_post(d_input,c_input,symbol_log);
+        }
+    }
     if(s === button){
         emote_box_used.parentElement.removeChild(document.getElementById("emotes_box"));
          s= undefined;
          s_emote = undefined;
          symbol_log.textContent = "";
          id_log.textContent =  "";
-         if(!post){
-            changevalue(d_input,c_input)
-         }
-         else{
-            changevalue_post(d_input,c_input);
-         }
+         update_i()
         
      }
      else {
@@ -508,7 +555,7 @@ function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
          id_log.className = "tag_i";
          id_log.style.paddingRight = "5px"
          id_log.style.color = "darkgray";
-         id_log.style.padding = "15px";
+         id_log.style.padding = "25px";
          id_log.style.color = 'white';
          list.style.scrollBehavior = "smooth";
          EMOTE_MENU.id = "emotes_box";
@@ -544,16 +591,11 @@ function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
                      s_emote.style.borderWidth = "0"; 
                  }
                  s_emote = obj;
-                 symbol_log.textContent = "использываемые символы: " +prefix + sticker_data[default_stickers[ii]].symbol ;
+                 
                  id_log.textContent = "айди: " + default_stickers[ii]
                  obj.style.borderWidth = "initial";
                
-                if(!post){
-                    changevalue(d_input,c_input)
-                }
-                else{
-                    changevalue_post(d_input,c_input);
-                }
+                 update_i()
              }
            
              list.append(obj);
@@ -567,9 +609,16 @@ function show_emotes_list(parent,d_input,c_input,button,symbol_log,post){
          list2.style.scrollBehavior = "smooth";
          const empty = document.createElement("div");
          empty.className = "backgraund_choose";
+         empty.onclick = function(){
+            choose_backgraund(undefined,empty)
+            update_i()
+         };
          const default_bg = document.createElement("div");
          default_bg.className = "backgraund_choose";
-        
+         default_bg.onclick = function(){
+            choose_backgraund("🟪",default_bg)
+            update_i()
+         };
          list2.appendChild(empty)
          list2.appendChild(default_bg)
          EMOTE_MENU.appendChild(id_log);
@@ -606,7 +655,7 @@ function checkforemotes1(event,data,pose){
         //
         var backgraund = undefined;
         if(event.target.textContent.split(data)[1][0] == "" ){
-            backgraund = event.target.textContent.split(data)[1][1] ;
+            backgraund = event.target.textContent.split("")[1].split(" ")[0] ;
         }
          
         
@@ -616,7 +665,16 @@ function checkforemotes1(event,data,pose){
             return;
         }
         else{
-            event.target.textContent =  event.target.textContent.replace(data,"")
+           
+            if(backgraund != undefined){
+                
+                
+                
+                event.target.textContent =  event.target.textContent.replace(data +  ""  + event.target.textContent.split(event.target.textContent.split(data)[1][0])[1].split(" ")[0],"") 
+            }
+            else{
+                event.target.textContent =  event.target.textContent.replace(data,"")
+            }
         }
        
         if( event.target.parentElement.className.includes("space-y-4 px-4")){
@@ -624,6 +682,7 @@ function checkforemotes1(event,data,pose){
             needtorender.push({
                 name:document.getElementsByClassName("hidden text-6xl text-white lg:block")[0].textContent,
                 img: document.getElementsByClassName("bg-primary rounded-3xl")[0],
+                bg:backgraund,
                 pose:emote
             })
         }
@@ -806,7 +865,7 @@ waitForElm('#content').then(async (elm) => {
         e.oninput = function(){
 
           
-            changevalue(event.target,e);
+            changevalue(event.target,e,p);
            
         }
      }
