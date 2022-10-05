@@ -326,12 +326,12 @@ function changevalue(d_input,input,symbol_log){
                 return;
             };
             if(bg_c != undefined){
-                d_input.value  = prefix + sticker_data[default_stickers[index]].symbol +  "" + bg_c + input.value;
+                d_input.value  = prefix + sticker_data[default_stickers[index]].symbol +  "" + bg_c + " " + input.value;
                 
                 console.log(symbol_log)
             }
             else{
-                d_input.value = prefix + sticker_data[default_stickers[index]].symbol  + input.value;
+                d_input.value = prefix + sticker_data[default_stickers[index]].symbol+ " "   + input.value;
                 console.log(symbol_log)
                
             }
@@ -389,11 +389,11 @@ function changevalue_post(d_input,input,symbol_log){
 
             
             if(bg_c != undefined){
-                d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol+"" + bg_c  + input.value;
+                d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol+"" + bg_c + " "  + input.value;
                
             }
             else{
-                d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol  + input.value;
+                d_input.textContent = prefix + sticker_data[default_stickers[index]].symbol + " "  + input.value;
                
                 
             }
