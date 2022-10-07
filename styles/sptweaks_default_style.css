@@ -1,8 +1,13 @@
 .backgraund_choose{
     height: 50px;
-    width: 50px;
+    width: auto;
     border-radius:25px;
     margin-right: 10px;
     background-color: rgba(0, 0, 0,0.1);
-    display: inline-block;
+    display: inline-flex;
+    cursor: pointer;
+    border-color: transparent;
+    border-width: 2px;
+    padding: 5px;
+    text-align: center;
 }
