@@ -66,7 +66,7 @@ async function serverdata_r(){
  function init(){
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera( 75,1, 0.1, 1000 );
-    renderer  = new THREE.WebGLRenderer({preserveDrawingBuffer:true,  alpha: true });
+    renderer  = new THREE.WebGLRenderer({preserveDrawingBuffer:true,  alpha: true,antialias:true });
     renderer.setClearColor( 0x000000, 0 );
     renderer.setSize( 512, 512);
     renderer.shadowMap.enabled = true;
@@ -96,33 +96,21 @@ async function serverdata_r(){
     })(0);
     
 }
+var light = new THREE.AmbientLight(0xffffff,0.2);
+let drl = new THREE.DirectionalLight(0xffffff,1);
 function reload_scene(){
     scene.clear()
     renderer.setSize(512,512)
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
     scene.background = null;
-    
-    var light = new THREE.AmbientLight(0xffffff,0.5);
-   
+    drl = new THREE.DirectionalLight(0xffffff,1);
+  
+
 
     scene.add(light);
-    const drl = new THREE.DirectionalLight(0xffffff,0.55);
-    drl.position.x = 0;
-    drl.position.z = -2;
-    drl.distance = 2000;
-    drl.position.y = 1;
-    drl.shadow.mapSize.width = 512; // default
-    drl.shadow.mapSize.height = 512; // default
-    drl.shadow.camera.near = 0.5; // default
-    drl.shadow.camera.far = 1000; 
-    drl.rotation.x = THREE.MathUtils.degToRad(90);
-    drl.rotation.y = THREE.MathUtils.degToRad(-180);
-    drl.castShadow = true;
-    scene.add(drl);
-    const helper = new THREE.CameraHelper( drl.shadow.camera );
-    scene.add( helper );
-    drl.target.position.set(0, -1, 0);
-    scene.add(drl.target);
+   
+   
+   
     camera.position.x = 0;
     camera.position.z = 1.1;
     camera.position.y = 1.5;
@@ -221,7 +209,7 @@ async function load_player_p(name,image,pose,backgraund  = undefined,test = unde
                 
 
 
-
+                
                 reload_scene()
 
               
@@ -290,11 +278,13 @@ async function load_player_p(name,image,pose,backgraund  = undefined,test = unde
                 
                    
                     if(backgraund !== undefined || test !== undefined &&backgraund != undefined  ||  test === undefined && sticker_data[pose].backgraund != undefined){
+                        
                         var bgs;
+                     
                         if(test != undefined && test.includes("bg" )){
                             bgs = backgraund
                         }
-                        
+                       
                         for(var i  = 0; i < backgraunds.length; i++){
                             const bg = backgraunds[i];
                             if( test === undefined && sticker_data[pose].backgraund  != undefined){
@@ -307,7 +297,21 @@ async function load_player_p(name,image,pose,backgraund  = undefined,test = unde
                             }
                            
                          }
-            
+                        
+                         if(bgs.ambient != undefined){
+                            drl = new THREE.DirectionalLight(bgs.ambient[0],bgs.ambient[1])
+                         }
+                         if(bgs.lights != undefined){
+                             await bgs.lights.forEach(light => {
+                                const point_l = new THREE.PointLight( light.color, light.a, light.d );
+                                point_l.position.set( light.position[0],light.position[1],light.position[2]);
+                                point_l.castShadow = true;
+                                
+                                point_l.shadow.bias = -0.007;
+                                scene.add( point_l );
+
+                            });
+                         }
                         if(bgs.model !== false) {
                             
                             var bg;
@@ -379,6 +383,21 @@ async function load_player_p(name,image,pose,backgraund  = undefined,test = unde
                 if( test == undefined && sticker_data[pose].render_size != undefined){
                     renderer.setSize(sticker_data[pose].render_size[0],sticker_data[pose].render_size[1])
                    }
+                   drl.position.x = 0;
+                   drl.position.z = -2;
+                   drl.distance = 2000;
+                   drl.position.y = 1;
+                   drl.shadow.mapSize.width = 512; // default
+                   drl.shadow.mapSize.height = 512; // default
+                   drl.shadow.camera.near = 0.5; // default
+                   drl.shadow.camera.far = 1000; 
+                   drl.rotation.x = THREE.MathUtils.degToRad(90);
+                   drl.rotation.y = THREE.MathUtils.degToRad(-180);
+                   drl.castShadow = true;
+                   drl.shadow.bias = -0.0005;
+                   scene.add(drl);
+                   drl.target.position.set(0, -1, 0);
+                   scene.add(drl.target);
                 renderer.render(scene,camera);
                 image.title = image.title.replace("сюда_ник", playerbuffer[name].nick);
                 image.src = renderer.domElement.toDataURL();
@@ -1008,7 +1027,30 @@ waitForElm('#content').then(async (elm) => {
         needtorender.push({
             name:event.target.src.replace("https://visage.surgeplay.com/front/240/",''),
             img: event.target,
-            test:["pose"],
+            test:["pose","bg"],
+            bg:{
+                "id":"halloween",
+                "symbol":"🎃",
+                "ambient":["#0000FF",1],
+                "skybox":["ucN1KM7"],
+                "lights":[{
+                    
+                        "position":[-1,5,-5],
+                        "a":2.5,
+                        "color":"#FFA500",
+                        "d":35
+                    },
+                    {
+                    
+                        "position":[5,5,5],
+                        "a":2.5,
+                        "color":"#FFA500",
+                        "d":35
+                    }
+                ],
+                "model":true,
+                "title":"Хэллоуин"
+            },
             pose:"trick_or_treat"
         })
      }
