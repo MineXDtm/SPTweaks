@@ -307,7 +307,7 @@ async function load_player_p(name,image,pose,backgraund  = undefined,test = unde
                                 point_l.position.set( light.position[0],light.position[1],light.position[2]);
                                 point_l.castShadow = true;
                                 
-                                point_l.shadow.bias = -0.007;
+                                point_l.shadow.bias = -0.03;
                                 scene.add( point_l );
 
                             });
@@ -1034,18 +1034,25 @@ waitForElm('#content').then(async (elm) => {
                 "ambient":["#0000FF",1],
                 "skybox":["ucN1KM7"],
                 "lights":[{
-                    
+
                         "position":[-1,5,-5],
-                        "a":2.5,
-                        "color":"#FFA500",
-                        "d":35
+                        "a":0.5,
+                        "color":"#00FFFF",
+                        "d":15
+                    },
+                    {
+                        
+                        "position":[-5,5,-10],
+                        "a":0.5,
+                        "color":"#00FFFF",
+                        "d":15
                     },
                     {
                     
                         "position":[5,5,5],
-                        "a":2.5,
+                        "a":3,
                         "color":"#FFA500",
-                        "d":35
+                        "d":25
                     }
                 ],
                 "model":true,
