@@ -3,7 +3,7 @@
     width: auto;
     border-radius:25px;
     margin-right: 10px;
-    background-color: rgba(0, 0, 0,0.1);
+    background-color: rgba(0, 0, 0,0.5);
     display: inline-flex;
     cursor: pointer;
     border-color: transparent;
