@@ -769,7 +769,9 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         id_log.className = "tag_i";
         id_log.style.paddingRight = "5px"
         id_log.style.color = "darkgray";
-        id_log.style.padding = "25px";
+        id_log.style.padding = "5px";
+        id_log.style.paddingLeft = "25px";
+        id_log.style.paddingTop = "25px";
         id_log.style.color = 'white';
         list.style.scrollBehavior = "smooth";
         EMOTE_MENU.id = "emotes_box";
@@ -824,7 +826,8 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         var list2 = document.createElement("div");
         list2.style.whiteSpace = "nowrap";
         list2.style.paddingTop = "5px"
-        list2.style.margin = "25px";
+        list2.style.margin = "15px";
+        list2.style.marginLeft = "25px";
         list2.style.marginTop = "0px";
         list2.style.overflowX = "scroll";
         list2.style.display = "flex";
