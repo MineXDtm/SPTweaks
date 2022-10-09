@@ -549,10 +549,10 @@ function changevalue(d_input, input, symbol_log) {
 }
 function symbolinfo_update(symbol_log, sticker) {
     if (bg_c != undefined) {
-        symbol_log.textContent = "использываемые символы: " + prefix + sticker_data[sticker].symbol + "" + bg_c;
+        symbol_log.textContent = "Используемые символы: " + prefix + sticker_data[sticker].symbol + "" + bg_c;
     }
     else {
-        symbol_log.textContent = "использываемые символы: " + prefix + sticker_data[sticker].symbol;
+        symbol_log.textContent = "Используемые символы: " + prefix + sticker_data[sticker].symbol;
     }
 }
 function changevalue_post(d_input, input, symbol_log) {
@@ -803,7 +803,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
                     }
                     s_emote = obj;
                     s_emote_id = default_stickers[ii];
-                    id_log.textContent = "айди: " + default_stickers[ii]
+                    id_log.textContent = "ID: " + default_stickers[ii]
                     obj.style.borderWidth = "initial";
 
                     update_i()
@@ -812,7 +812,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
                 if (s_emote_id === default_stickers[ii]) {
                     s_emote = obj;
 
-                    id_log.textContent = "айди: " + default_stickers[ii]
+                    id_log.textContent = "ID: " + default_stickers[ii]
                     obj.style.borderWidth = "initial";
                     update_i()
 
