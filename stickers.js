@@ -1042,7 +1042,7 @@ async function  enable(){
     default_backgraunds = Maininfo.default_backgraunds;
 
     init()
-    if (document.getElementsByClassName("ProseMirror").length > 0) {
+    if (document.getElementsByClassName("ProseMirror").length > 0 && !location.href.includes("campaigns")) {
         loadPOST(document.getElementsByClassName("ProseMirror")[0].firstChild)
     }
     if (document.getElementsByClassName("mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60")[0] != undefined) {
@@ -1080,11 +1080,11 @@ async function  enable(){
                 event.target.parentElement.parentElement.insertBefore(event.target.parentElement, event.target.parentElement.parentElement.getElementsByClassName("sticker")[0])
             }
         }
-        else if (event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror") && !location.href.includes("groups")) {
+        else if (event.target.nodeName === "P" && event.target.parentElement.className.includes("ProseMirror") && !location.href.includes("groups") && !location.href.includes("campaigns")) {
             loadPOST(event.target)
         }
         else if (event.target.nodeName === "P" && !event.target.parentElement.className.includes("ProseMirror") && event.target.className !== "tag_i") {
-
+            
             if (event.target.textContent === "") {
                 event.target.addEventListener("DOMSubtreeModified", function () {
 
