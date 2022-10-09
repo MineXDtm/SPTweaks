@@ -1,20 +1,4 @@
 
-<<<<<<< Updated upstream
-browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    
-    if(changeInfo.status == "complete"){
-        
-        if(tab.url.includes("https://spworlds.ru") &&  tab.url.includes("lawsuits")  &&  !tab.url.includes("lawsuits/")){
-            console.log(browser.tabs);
-            browser.tabs.executeScript({
-                file: 'sude_plus.js'
-                
-              }); 
-            
-        }
-        else if(tab.url.includes("https://spworlds.ru") &&  tab.url.includes("lawsuits/") && !tab.url.includes("/new") ){
-            browser.tabs.executeScript({
-=======
 
 
 
@@ -119,16 +103,13 @@ browser.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
                 function (tabs)
                 {
                     browser.tabs.executeScript({
->>>>>>> Stashed changes
                         file: 'delo.js'
                       }); 
-            
+            });
         }
+        
         if( tab.url.includes("https://spworlds.ru") &&  tab.url.includes("about")){
 
-<<<<<<< Updated upstream
-            browser.tabs.executeScript({
-=======
             browser.tabs.query(
                 {
                 lastFocusedWindow: true,
@@ -137,11 +118,12 @@ browser.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
                 function (tabs)
                 {
                     browser.tabs.executeScript({
->>>>>>> Stashed changes
                         file: 'about.js'
                     }); 
-            
+                });
+
         }
     }
     
 }); 
+
