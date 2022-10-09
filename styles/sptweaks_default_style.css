@@ -9,5 +9,7 @@
     border-color: transparent;
     border-width: 2px;
     padding: 5px;
+    vertical-align: bottom;
     text-align: center;
+    box-sizing: border-box;
 }

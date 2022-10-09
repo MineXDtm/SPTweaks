@@ -1,4 +1,8 @@
-
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.type == "contains_script"){
+        sendResponse(true);
+    }
+});
 function waitForElm(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
@@ -42,6 +46,7 @@ async function serverdata_r() {
 
     }
     (async function main(counter) {
+        if(document.getElementsByClassName("hidden md:block")[1] == undefined) return;
         if (counter > 1500) {
 
             counter = 0;
@@ -83,7 +88,7 @@ async function init() {
     renderer.autoClear = false;
     serverdata_r();
     (async function main() {
-
+        
         if (needtorender.length > 0) {
 
             if (needtorender[0].img === undefined || needtorender[0].img.parentElement == null || needtorender[0].img.parentElement != null && typeof needtorender[0].img.parentElement === Node ||
@@ -125,7 +130,6 @@ var playerbuffer = {}
 var posebuffer = {}
 let alex;
 let steve;
-
 (async () => {
     try {
         alex = await new THREE.GLTFLoader().loadAsync(chrome.runtime.getURL("./alex.gltf"));
@@ -455,16 +459,30 @@ function getplayer2(playername) {
 var s = undefined;
 var s_emote = undefined;
 
-function changesize(obj) {
-    if (window.innerWidth >= 1280) {
-        obj.style.width = "656px";
+function changesize(obj, post = true) {
+    if(post){
+        if (window.innerWidth >= 1280) {
+            obj.style.width = "656px";
+        }
+        else if (window.innerWidth >= 1020) {
+            obj.style.width = "400px";
+        }
+        else {
+            obj.style.width = "448px";
+        }
     }
-    else if (window.innerWidth >= 1020) {
-        obj.style.width = "400px";
+    else{
+        if(window.innerWidth  >= 1280){
+            obj.style.width = "624px";
+        }
+        else if (window.innerWidth  >= 1025){
+            obj.style.width = "368px";
+        }
+        else{
+            obj.style.width = "416px";
+        }
     }
-    else {
-        obj.style.width = "448px";
-    }
+   
 }
 var prefix;
 
@@ -652,6 +670,8 @@ function sendcors(url) {
         });
     });
 }
+
+
 var bg_c = undefined;
 var bg_b = undefined;
 function choose_backgraund(backgraund, b) {
@@ -808,6 +828,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         list2.style.marginTop = "0px";
         list2.style.overflowX = "scroll";
         list2.style.display = "flex";
+        list2.style.display = "inline-block"
         list2.style.overflowY = "hidden";
         list2.style.scrollBehavior = "smooth";
         const title2 = document.createElement("p");
@@ -818,9 +839,10 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         function bginfo(b, title_, icon) {
             const title = document.createElement("p");
             title.style.display = "inline-flex";
-            title.textContent = title_;
+            title.textContent = title_.charAt(0).toUpperCase() + title_.slice(1);
             title.style.margin = "5px";
             title.style.userSelect = "none";
+
             if (icon != undefined) {
                 const icon_ = document.createElement("img");
                 icon_.src = icon;
@@ -853,6 +875,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
             const bg = backgraunds[i];
             const bg_obg = document.createElement("div");
             bg_obg.className = "backgraund_choose";
+ 
             bginfo(bg_obg, bg.title, "https://i.imgur.com/" + bg.icon + ".png");
 
             bg_obg.onclick = async function () {
@@ -876,7 +899,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         EMOTE_MENU.className = "rounded-2xl text-white bg-gray-500";
         
 
-        changesize(EMOTE_MENU);
+        changesize(EMOTE_MENU,post);
         addEventListener('resize', (event) => {
             if (EMOTE_MENU == undefined) {
                 removeEventListener(this);
@@ -884,7 +907,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
 
 
 
-            changesize(EMOTE_MENU)
+            changesize(EMOTE_MENU,post)
         });
         parent.appendChild(EMOTE_MENU);
         if (post)
@@ -986,7 +1009,9 @@ function checkforemotes2(event, data, pose) {
 
     }
 }
-waitForElm('#content').then(async (elm) => {
+
+async function  enable(){
+    
     var link = document.createElement("link");
     link.href = chrome.extension.getURL("./styles/sptweaks_default_style.css");
     link.type = "text/css";
@@ -1029,7 +1054,8 @@ waitForElm('#content').then(async (elm) => {
             pose: Maininfo.default_profile_icon
         })
     }
-    elm.addEventListener('DOMNodeInserted', async function (event) {
+
+    document.addEventListener('DOMNodeInserted', async function (event) {
 
 
 
@@ -1131,9 +1157,17 @@ waitForElm('#content').then(async (elm) => {
 
 
     })
+}
+if(document.getElementById("content") != undefined){
+    enable( )
+}
+else{
+    waitForElm('#content').then(async (elm) => {
+    
+        enable()
 
 
 
 
-
-});
+    });
+}
