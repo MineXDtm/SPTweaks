@@ -13,8 +13,8 @@
     "tabs", "<all_urls>","background"
   ],
   "web_accessible_resources": [
-    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","steve.gltf","alex.gltf",
-    "poses/*","backgraund/*","styles/*","avatar_backgraund/*","decorations/*","emote_icon.svg","saul_bg.png", "loading_emote.png"
+    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","steve.gltf","alex.gltf","skybox.gltf",
+    "poses/*","backgraund/*","styles/*","avatar_backgraund/*","decorations/*","emote_icon.png","saul_bg.png", "load_sticker.svg"
  ],
   "browser_action": {
     "default_icon": "icon.png",
