@@ -4,6 +4,8 @@
 
 Опенсурс расширение для Chrome и FireFox(Mozilla), способное делать многие вещи с сайтом spworlds.ru.
 
+скачать на мозилу сдесь: https://addons.mozilla.org/ru/firefox/addon/sptweaks/
+
 Видео-трейлер - https://www.youtube.com/watch?v=_-h7HS-hyo0
 
 Сайт проекта - https://minexdtm.com/
