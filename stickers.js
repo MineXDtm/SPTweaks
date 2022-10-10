@@ -112,7 +112,7 @@ async function init() {
     })(0);
 
 }
-var light = new THREE.AmbientLight(0xffffff, 0.2);
+var light = new THREE.AmbientLight(0xffffff, 0.3);
 let drl = new THREE.DirectionalLight(0xffffff, 1);
 function reload_scene() {
     scene.clear()
@@ -829,7 +829,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         list2.style.marginTop = "0px";
         list2.style.overflowX = "scroll";
         list2.style.display = "flex";
-        list2.style.display = "inline-block"
+        list2.style.display = "flow-root"
         list2.style.overflowY = "hidden";
         list2.style.scrollBehavior = "smooth";
         const title2 = document.createElement("p");
