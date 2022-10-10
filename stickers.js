@@ -507,12 +507,12 @@ function changevalue(d_input, input, symbol_log) {
         };
         if (bg_c != undefined) {
             d_input.value = prefix + sticker_data[s_emote_id].symbol + "" + bg_c + " " + input.value;
-
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ "" + bg_c + " " ).length
 
         }
         else {
             d_input.value = prefix + sticker_data[s_emote_id].symbol + " " + input.value;
-
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ " ").length
 
         }
 
@@ -521,7 +521,7 @@ function changevalue(d_input, input, symbol_log) {
             cancelable: true,
         });
 
-        input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol).length
+        
         if (input.value.length > input.maxLength) {
 
 
@@ -568,18 +568,18 @@ function changevalue_post(d_input, input, symbol_log) {
 
         if (bg_c != undefined) {
             d_input.textContent = prefix + sticker_data[s_emote_id].symbol + "" + bg_c + " " + input.value;
-
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ "" + bg_c + " " ).length
         }
         else {
             d_input.textContent = prefix + sticker_data[s_emote_id].symbol + " " + input.value;
-
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ " ").length
 
         }
         var event = new Event('input', {
             bubbles: true,
             cancelable: true,
         });
-        input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol).length
+
         if (input.value.length > input.maxLength) {
 
 
@@ -1072,7 +1072,7 @@ async function  enable(){
             needtorender.push({
                 name: event.target.src.replace("https://visage.surgeplay.com/front/240/", ''),
                 img: event.target,
-                pose: Maininfo.default_profile_icon
+                pose:  Maininfo.default_profile_icon
             })
         }
         else if (event.target.className === "mx-auto max-h-96 cursor-pointer rounded-xl") {
