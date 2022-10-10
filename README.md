@@ -10,6 +10,7 @@
 
 Дискорд проекта - https://discord.com/invite/RbNCXnc4PA
 
+Гайд по установке: https://www.youtube.com/watch?v=2UrzB2tVFmY
 
 Расширение не имеет никакой коммерческой цели и создано лишь как помощь игрокам проектов #СП.
 
