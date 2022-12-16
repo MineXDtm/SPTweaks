@@ -1,14 +1,14 @@
 {
 	"camera":{
         "position":{
-            "x":-1.1,
-            "y":1.7,
-            "z":-1.1
+            "x":1.5,
+            "y":2.2,
+            "z":-0.7
         },
         "rotation":{
-            "x":0,
-            "y":-130,
-            "z":0
+            "x": -30,
+            "y":-250,
+            "z": 0
         }
     },
 	"moves": [
@@ -17,7 +17,7 @@
 			"id": "Head",
 			"invertAxis": "xy",
 			"translate": [0, -24, 0],
-			"rotate": [6, -5, 0],
+			"rotate": [5, -25, 0],
 			"boxes": [
 				{"coordinates": [-4, 24, -4, 8, 8, 8], "textureOffset": [0, 0]},
 				{"coordinates": [-4, 24, -4, 8, 8, 8], "textureOffset": [32, 0], "sizeAdd": 0.5}
@@ -28,6 +28,7 @@
 			"id": "Body",
 			"invertAxis": "xy",
 			"translate": [0, -24, 0],
+			"rotate": [-2, 0, 0],
 			"boxes": [
 				{"coordinates": [-4, 12, -2, 8, 12, 4], "textureOffset": [16, 16]},
 				{"coordinates": [-4, 12, -2, 8, 12, 4], "textureOffset": [16, 32], "sizeAdd": 0.25}
@@ -37,8 +38,8 @@
 			"part": "RightArm",
 			"id": "RightArm",
 			"invertAxis": "xy",
-			"translate": [-5, -22, 0],
-			"rotate": [77.5, 0, 0],
+			"translate": [-4, -23, 1],
+			"rotate": [97, -17, -2],
 			"boxes": [
 				{"coordinates": [4, 12, -2, 4, 12, 4], "textureOffset": [40, 16]},
 				{"coordinates": [4, 12, -2, 4, 12, 4], "textureOffset": [40, 32], "sizeAdd": 0.25}
@@ -49,7 +50,7 @@
 			"id": "LeftArm",
 			"invertAxis": "xy",
 			"translate": [5, -22, 0],
-			"rotate": [78, 0, 0],
+			"rotate": [100.0219, 0.13426, -0.15025],
 			"boxes": [
 				{"coordinates": [-8, 12, -2, 4, 12, 4], "textureOffset": [32, 48]},
 				{"coordinates": [-8, 12, -2, 4, 12, 4], "textureOffset": [48, 48], "sizeAdd": 0.25}
@@ -59,8 +60,8 @@
 			"part": "RightLeg",
 			"id": "RightLeg",
 			"invertAxis": "xy",
-			"translate": [-1.9, -12, 0],
-			"rotate": [-11, 0, 2],
+			"translate": [-1.9, -13, 2],
+			"rotate": [2.5, 0, 0],
 			"boxes": [
 				{"coordinates": [-0.1, 0, -2, 4, 12, 4], "textureOffset": [0, 16]},
 				{"coordinates": [-0.1, 0, -2, 4, 12, 4], "textureOffset": [0, 32], "sizeAdd": 0.25}
@@ -71,7 +72,7 @@
 			"id": "LeftLeg",
 			"invertAxis": "xy",
 			"translate": [1.9, -12, 0],
-			"rotate": [10, 0, -2],
+			"rotate": [-28, 0, 0],
 			"boxes": [
 				{"coordinates": [-3.9, 0, -2, 4, 12, 4], "textureOffset": [16, 48]},
 				{"coordinates": [-3.9, 0, -2, 4, 12, 4], "textureOffset": [0, 48], "sizeAdd": 0.25}
