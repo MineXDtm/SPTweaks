@@ -13,3 +13,13 @@
     text-align: center;
     box-sizing: border-box;
 }
+.outline_sticker {
+    position: absolute;
+    background-attachment:local;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    z-index: 0;
+    margin: auto;
+    border-radius: 15px;
+}

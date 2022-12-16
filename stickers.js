@@ -1,5 +1,5 @@
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.type == "contains_script"){
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.type == "contains_script") {
         sendResponse(true);
     }
 });
@@ -46,7 +46,7 @@ async function serverdata_r() {
 
     }
     (async function main(counter) {
-        if(document.getElementsByClassName("hidden md:block")[1] == undefined) return;
+        if (document.getElementsByClassName("hidden md:block")[1] == undefined) return;
         if (counter > 1500) {
 
             counter = 0;
@@ -70,7 +70,7 @@ async function serverdata_r() {
 }
 
 var scenebg = new THREE.Scene();
-var skyb ;
+var skyb;
 
 async function init() {
     scene = new THREE.Scene()
@@ -88,7 +88,7 @@ async function init() {
     renderer.autoClear = false;
     serverdata_r();
     (async function main() {
-        
+
         if (needtorender.length > 0) {
 
             if (needtorender[0].img === undefined || needtorender[0].img.parentElement == null || needtorender[0].img.parentElement != null && typeof needtorender[0].img.parentElement === Node ||
@@ -99,11 +99,12 @@ async function init() {
             else {
 
                 if (needtorender[0].test == undefined) {
-                    await load_player_p(needtorender[0].name, needtorender[0].img, needtorender[0].pose, needtorender[0].bg)
+                    await load_player_p(needtorender[0].name, needtorender[0].img, needtorender[0].pose,{backgraund: needtorender[0].bg,outline:needtorender[0].outline})
                 }
                 else {
-                    await load_player_p(needtorender[0].name, needtorender[0].img, needtorender[0].pose, needtorender[0].bg, needtorender[0].test)
+                    await load_player_p(needtorender[0].name, needtorender[0].img, needtorender[0].pose,{backgraund: needtorender[0].bg,outline:needtorender[0].outline,test: needtorender[0].test})
                 }
+
 
                 needtorender.shift();
             }
@@ -138,7 +139,7 @@ let steve;
         // Deal with the fact the chain failed
     }
 })();
-async function load_player_p(name, image, pose, backgraund = undefined, test = undefined) {
+async function load_player_p(name, image, pose, {backgraund, test,outline}={}) {
 
     let object;
     let texture;
@@ -285,6 +286,7 @@ async function load_player_p(name, image, pose, backgraund = undefined, test = u
     if (test == undefined && sticker_data[pose].render_size != undefined) {
         renderer.setSize(sticker_data[pose].render_size[0], sticker_data[pose].render_size[1])
     }
+
     if (backgraund !== undefined || test !== undefined && backgraund != undefined || test === undefined && sticker_data[pose].backgraund != undefined) {
 
         var bgs;
@@ -313,7 +315,9 @@ async function load_player_p(name, image, pose, backgraund = undefined, test = u
 
             var bg;
             if (bg_buffer[bgs.id] == undefined) {
+
                 var bgg = await sendcors("https://minexdtm.com/backgraund/" + bgs.id + ".gltf");
+
                 bg = await load_model_from_string(JSON.stringify(bgg));
                 bg_buffer[bgs.id] = bg;
             }
@@ -429,9 +433,7 @@ async function load_player_p(name, image, pose, backgraund = undefined, test = u
     image.title = image.title.replace("сюда_ник", playerbuffer[name].nick);
     image.style.backgroundColor = "";
     image.src = renderer.domElement.toDataURL();
-
-
-
+    image.dispatchEvent(new Event("rendered"))
 }
 var bg_buffer = {}
 var skybox_buffer = {}
@@ -460,29 +462,33 @@ var s = undefined;
 var s_emote = undefined;
 
 function changesize(obj, post = true) {
-    if(post){
+    if (post) {
         if (window.innerWidth >= 1280) {
             obj.style.width = "656px";
         }
         else if (window.innerWidth >= 1020) {
             obj.style.width = "400px";
         }
-        else {
+        else if(window.innerWidth >=500){
             obj.style.width = "448px";
         }
+        else {
+            obj.style.width = "364px";
+        }
     }
-    else{
-        if(window.innerWidth  >= 1280){
+    else {
+        if (window.innerWidth >= 1280) {
             obj.style.width = "624px";
         }
-        else if (window.innerWidth  >= 1025){
+        else if (window.innerWidth >= 1025) {
             obj.style.width = "368px";
         }
-        else{
+        else {
             obj.style.width = "416px";
         }
+
     }
-   
+
 }
 var prefix;
 
@@ -507,12 +513,12 @@ function changevalue(d_input, input, symbol_log) {
         };
         if (bg_c != undefined) {
             d_input.value = prefix + sticker_data[s_emote_id].symbol + "" + bg_c + " " + input.value;
-            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ "" + bg_c + " " ).length
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol + "" + bg_c + " ").length
 
         }
         else {
             d_input.value = prefix + sticker_data[s_emote_id].symbol + " " + input.value;
-            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ " ").length
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol + " ").length
 
         }
 
@@ -521,7 +527,7 @@ function changevalue(d_input, input, symbol_log) {
             cancelable: true,
         });
 
-        
+
         if (input.value.length > input.maxLength) {
 
 
@@ -568,11 +574,11 @@ function changevalue_post(d_input, input, symbol_log) {
 
         if (bg_c != undefined) {
             d_input.textContent = prefix + sticker_data[s_emote_id].symbol + "" + bg_c + " " + input.value;
-            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ "" + bg_c + " " ).length
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol + "" + bg_c + " ").length
         }
         else {
             d_input.textContent = prefix + sticker_data[s_emote_id].symbol + " " + input.value;
-            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol+ " ").length
+            input.maxLength = 300 - (prefix + sticker_data[s_emote_id].symbol + " ").length
 
         }
         var event = new Event('input', {
@@ -691,7 +697,7 @@ function choose_backgraund(backgraund, b) {
 var s_emote_id;
 
 
-function sticker_design_load(img, size) {
+function sticker_design_load(img, size,stickerbox) {
     img.setAttribute('style', '-webkit-user-drag: none')
     img.height = size;
     img.width = size;
@@ -699,14 +705,60 @@ function sticker_design_load(img, size) {
     img.src = chrome.runtime.getURL("./load_sticker.svg")
     img.style.userSelect = "none"
     img.style.objectFit = "contain"
-
+    img.style.zIndex = "1";
+    img.style.position = "relative";
     img.style.backgroundColor = "rgba(45,45, 45, 1)";
     img.style.borderRadius = "15px"
-    img.style.filter = "drop-shadow(0 2px gray) drop-shadow(0 -2px gray) drop-shadow(2px 0 gray) drop-shadow(-2px 0 gray)";
+    img.classList.toggle("border_sticker", true);
+    create_outline(stickerbox,img,3);
+
+
 
 
 }
+function create_outline(outline,img,size){
+    var gradient = "linear-gradient(222deg, rgba(203,203,203,1) 0%, rgba(121,121,121,1) 55%, rgba(113,113,113,1) 100%)";
+    const img_r = document.createElement("div");
+    img_r.style.backgroundImage = gradient;
+    img_r.className = "outline_sticker";
+    img_r.style.width = img.width  + size + "px";
+    img_r.style.height = img.height  + size + "px";
+    img_r.style.left = -size + "px";
+    img_r.style.top = -size + "px";
+    outline.appendChild(img_r);
+    const img_r2 = document.createElement("div");
+    img_r2.style.backgroundImage = gradient;
+    img_r2.className = "outline_sticker";
+    img_r2.style.width = img.width  + size + "px";
+    img_r2.style.height = img.height   + size + "px";
+    img_r2.style.left = "0px";
+    img_r2.style.top = "0px";
+    outline.appendChild(img_r2);
+    const img_r3 = document.createElement("div");
+    img_r3.style.backgroundImage = gradient;
+    img_r3.className = "outline_sticker";
+    img_r3.style.width = img.width  + size + "px";
+    img_r3.style.height = img.height  + size + "px";
+    img_r3.style.left = -size + "px";
+    img_r3.style.top = "0px";
+    outline.appendChild(img_r3);
+    const img_r4 = document.createElement("div");
+    img_r4.style.backgroundImage = gradient;
+    img_r4.className = "outline_sticker";
+    img_r4.style.width =img.width  + size + "px";
+    img_r4.style.height = img.height  + size + "px";
+    img_r4.style.left = "0px";
+    img_r4.style.top = -size + "px";
+    outline.appendChild(img_r4);
+    img.addEventListener("rendered", function(event) {
+   
+            img_r4.style.cssText = img_r4.style.cssText + " -webkit-mask-image: url("+img.src+");";
+            img_r3.style.cssText = img_r3.style.cssText +  " -webkit-mask-image: url("+img.src+");";
+            img_r2.style.cssText = img_r2.style.cssText +  " -webkit-mask-image: url("+img.src+");";
+            img_r.style.cssText = img_r.style.cssText + " -webkit-mask-image: url("+img.src+");";
 
+    });
+}
 function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
     var id_log = document.createElement("p");
     function update_i() {
@@ -764,6 +816,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         list.style.margin = "15px";
         list.style.marginTop = "0px";
         list.style.overflowX = "scroll";
+        list.style.height = "205px"
         list.id = "emotelist";
 
         id_log.className = "tag_i";
@@ -775,38 +828,57 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         id_log.style.color = 'white';
         list.style.scrollBehavior = "smooth";
         EMOTE_MENU.id = "emotes_box";
-
+        EMOTE_MENU.style.paddingBottom ="5px";
         function loadstickers() {
             list.innerHTML = "";
             for (var i = 0; i < default_stickers.length; i++) {
                 const obj = document.createElement("div");
                 const img = document.createElement("img");
+
                 const ii = i;
-                sticker_design_load(img, 118);
+             
                 img.title = sticker_data[default_stickers[ii]].title
+  
+               
+                const outline = document.createElement("div");
+                outline.style.position = "relative";
+                outline.style.height = "118px";
+                outline.style.display = "flex";
+                outline.style.justifyContent = "center";
+                outline.style.alignItems = "center";
+                outline.style.margin = "auto";
+                outline.style.width ="118px";
+                sticker_design_load(img, 118,outline);
+            
+         
+
                 needtorender.push({
                     name: document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0].src.replace("https://visage.surgeplay.com/face/80/", ''),
                     img: img,
                     bg: bg_c,
                     pose: default_stickers[ii]
                 })
-                obj.appendChild(img)
-                obj.className = "rounded-2xl  bg-gray-300 p-4 text-white ";
+                outline.appendChild(img)
+                obj.appendChild(outline)
+                obj.className = "rounded-2xl  bg-gray-300 text-white ";
 
-                obj.style.display = "inline-block";
+                obj.style.display = "inline-flex";
                 obj.style.width = "150px";
                 obj.style.backgroundColor = "rgba(0, 0, 0,0.1)";
                 obj.style.height = "150px";
                 obj.style.cursor = "pointer";
                 obj.style.marginLeft = "15px";
+                obj.style.borderColor = "transparent";
+                
+                obj.style.borderWidth = "initial";
                 obj.onclick = function () {
                     if (s_emote !== undefined) {
-                        s_emote.style.borderWidth = "0";
+                        s_emote.style.borderColor = "transparent";
                     }
                     s_emote = obj;
                     s_emote_id = default_stickers[ii];
                     id_log.textContent = "ID: " + default_stickers[ii]
-                    obj.style.borderWidth = "initial";
+                    obj.style.borderColor = "white";
 
                     update_i()
                 }
@@ -815,7 +887,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
                     s_emote = obj;
 
                     id_log.textContent = "ID: " + default_stickers[ii]
-                    obj.style.borderWidth = "initial";
+                    obj.style.borderColor = "white";
                     update_i()
 
                 }
@@ -834,6 +906,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         list2.style.display = "flow-root"
         list2.style.overflowY = "hidden";
         list2.style.scrollBehavior = "smooth";
+        list2.style.height = "75px"
         const title2 = document.createElement("p");
         title2.textContent = "Фон";
         title2.style.margin = "30px";
@@ -878,7 +951,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
             const bg = backgraunds[i];
             const bg_obg = document.createElement("div");
             bg_obg.className = "backgraund_choose";
- 
+
             bginfo(bg_obg, bg.title, "https://i.imgur.com/" + bg.icon + ".png");
 
             bg_obg.onclick = async function () {
@@ -900,9 +973,9 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
         EMOTE_MENU.appendChild(title2);
         EMOTE_MENU.append(list2);
         EMOTE_MENU.className = "rounded-2xl text-white bg-gray-500";
-        
 
-        changesize(EMOTE_MENU,post);
+
+        changesize(EMOTE_MENU, post);
         addEventListener('resize', (event) => {
             if (EMOTE_MENU == undefined) {
                 removeEventListener(this);
@@ -910,7 +983,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
 
 
 
-            changesize(EMOTE_MENU,post)
+            changesize(EMOTE_MENU, post)
         });
         parent.appendChild(EMOTE_MENU);
         if (post)
@@ -963,18 +1036,25 @@ function checkforemotes1(event, data, pose) {
             })
         }
         else {
+            const outline = document.createElement("div");
+            outline.style.position = "relative";
+            outline.style.height = "200px";
+            outline.style.display = "flex";
+            outline.style.justifyContent = "center";
+            outline.style.alignItems = "center";
+            outline.style.width ="200px";
             const img = document.createElement("img");
-            sticker_design_load(img, 200)
+            sticker_design_load(img, 200,outline)
             img.title = sticker_data[emote].title
 
-
+            outline.appendChild(img);
             needtorender.push({
                 name: event.target.parentElement.firstChild.href.replace("https://spworlds.ru/sp/users/", ""),
                 img: img,
                 bg: backgraund,
                 pose: emote
             })
-            event.target.parentElement.append(img);
+            event.target.parentElement.append(outline);
         }
 
 
@@ -998,8 +1078,16 @@ function checkforemotes2(event, data, pose) {
             event.target.textContent = event.target.textContent.replace(data, "")
         }
         const img = document.createElement("img");
-        sticker_design_load(img, 200)
+        const outline = document.createElement("div");
+        outline.style.position = "relative";
+        outline.style.height = "200px";
+        outline.style.display = "flex";
+        outline.style.justifyContent = "center";
+        outline.style.alignItems = "center";
+        outline.style.width ="200px";
+        sticker_design_load(img, 200,outline)
         img.title = sticker_data[emote].title
+        outline.appendChild(img)
         needtorender.push({
             name: event.target.parentElement.parentElement.firstChild.firstChild.href.replace("https://spworlds.ru/sp/users/", ""),
             img: img,
@@ -1007,14 +1095,14 @@ function checkforemotes2(event, data, pose) {
             pose: emote
         })
 
-        event.target.parentElement.parentElement.append(img);
+        event.target.parentElement.parentElement.append(outline);
 
 
     }
 }
 
-async function  enable(){
-    
+async function enable() {
+
     var link = document.createElement("link");
     link.href = chrome.extension.getURL("./styles/sptweaks_default_style.css");
     link.type = "text/css";
@@ -1072,7 +1160,7 @@ async function  enable(){
             needtorender.push({
                 name: event.target.src.replace("https://visage.surgeplay.com/front/240/", ''),
                 img: event.target,
-                pose:  Maininfo.default_profile_icon
+                pose: Maininfo.default_profile_icon
             })
         }
         else if (event.target.className === "mx-auto max-h-96 cursor-pointer rounded-xl") {
@@ -1084,7 +1172,7 @@ async function  enable(){
             loadPOST(event.target)
         }
         else if (event.target.nodeName === "P" && !event.target.parentElement.className.includes("ProseMirror") && event.target.className !== "tag_i") {
-            
+
             if (event.target.textContent === "") {
                 event.target.addEventListener("DOMSubtreeModified", function () {
 
@@ -1161,12 +1249,12 @@ async function  enable(){
 
     })
 }
-if(document.getElementById("content") != undefined){
-    enable( )
+if (document.getElementById("content") != undefined) {
+    enable()
 }
-else{
+else {
     waitForElm('#content').then(async (elm) => {
-    
+
         enable()
 
 
