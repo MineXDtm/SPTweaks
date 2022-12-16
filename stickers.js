@@ -701,7 +701,7 @@ function sticker_design_load(img, size,stickerbox) {
     img.setAttribute('style', '-webkit-user-drag: none')
     img.height = size;
     img.width = size;
-    img.className = "sticker";
+   
     img.src = chrome.runtime.getURL("./load_sticker.svg")
     img.style.userSelect = "none"
     img.style.objectFit = "contain"
@@ -841,6 +841,7 @@ function show_emotes_list(parent, d_input, c_input, button, symbol_log, post) {
   
                
                 const outline = document.createElement("div");
+                outline.className = "sticker";
                 outline.style.position = "relative";
                 outline.style.height = "118px";
                 outline.style.display = "flex";
@@ -1165,6 +1166,7 @@ async function enable() {
         }
         else if (event.target.className === "mx-auto max-h-96 cursor-pointer rounded-xl") {
             if (event.target.parentElement.parentElement.getElementsByClassName("sticker")[0] != undefined) {
+                console.log(event.target.parentElement.parentElement.getElementsByClassName("sticker")[0])
                 event.target.parentElement.parentElement.insertBefore(event.target.parentElement, event.target.parentElement.parentElement.getElementsByClassName("sticker")[0])
             }
         }
