@@ -1,28 +1,27 @@
 {
   "manifest_version": 2,
-
   "name": "SPTweaks",
   "description": "твикер для сайта проекта #SPWorlds. Переродился из личного проекта для удаления закрытых дел на суд.",
   "version": "1.3.3",
-
   "icons": {
-    "48": "icon.png"
+    "48": "src/assets/icons/icon.png"
   },
-
   "permissions": [
-    "tabs", "<all_urls>","background"
+    "tabs",
+    "<all_urls>",
+    "background"
   ],
-  "web_accessible_resources": [
-    "three.js","three.js-master/examples/js/loaders/GLTFLoader.js","steve.gltf","alex.gltf","skybox.gltf",
-    "poses/*","backgraund/*","styles/*","avatar_backgraund/*","decorations/*","emote_icon.png","saul_bg.png", "load_sticker.svg"
- ],
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "index.html"
+  "{{chrome}}.action": {
+    "default_popup": "popup.html"
   },
+  "{{firefox}}.browser_action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": ["src/assets/*","sptweaks.css"],
   "background": {
-    "scripts": ["vizualno_ronunru.js"],
-    "persistent": false
-
+    "{{chrome}}.service_worker": "vizualno_ronunru.js",
+    "{{firefox}}.scripts": [
+      "vizualno_ronunru.js"
+    ]
   }
 }

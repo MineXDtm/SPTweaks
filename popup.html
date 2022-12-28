@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
+    
+    <style>
+      body{
+       background-color: #1E1E24;
+      }
+      button{
+        background-color: #352328;
+        border-width: 0;
+        height: 35px;
+        width: 300px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      button:hover{
+        background-color: #4a2d35;
+      }
+      button:active{
+        background-color: #352328;
+      }
+
+
+    
+
+
+      button.open{
+        background-color: #222D2B;
+      }
+      button.open:hover{
+        background-color: #2e4743;
+      }
+      button.open:active{
+        background-color: #222D2B;
+      }
+
+
+
+
+
+      a:link {
+        color: #ffffff; 
+        text-decoration: none;
+      }
+      a:visited {
+        color: #ffffff;
+        text-decoration: none;
+      }
+      a:hover {
+        color: #d2d2d2;
+        text-decoration: none;
+      }
+      a:active {
+        color: #ffffff; 
+        text-decoration: none;
+
+      }
+
+
+
+      p.convert_result {
+        color: white !important;
+      }
+
+
+      .form-control:focus {
+        border-color: #6563EE;
+        box-shadow: 0 0 0 0.2rem rgba(101, 99, 238, 5);
+    } 
+
+    img {
+      margin-left:10px;
+      }
+
+    p.attention{
+
+      margin-left: 10px;
+      margin-bottom: 10px;
+
+    }
+     </style>
+   </head>
+  
+
+  <body style="width: 400px; height: 200px;">
+    <h6></h6>
+
+
+    
+    <font size="3" color="ffffff" face="Noto Sans"><h1><strong><img src="icon.svg" width="40px" height="40px">    SPtweaks</strong></h1></font>
+    <h6></h6>
+
+
+
+
+<center>
+<div class="convert_block_item">
+<input type="number" class="form-control" id="val" placeholder="Введите сумму" style="width: 150px; background-color: #111116; color: #ffffff; border-color: #6563EE;" />
+<select id="cur1" class="form-select" aria-label="Default select example" style="width: 80px; position: absolute !important; left: 15px; top: 100px; background-color: #111116; color: #ffffff; border-color: #6563EE;">
+  <option>АР</option>
+  <option>СТ.АР</option>
+  <option>ШК.АР</option>
+</select>
+    <p></p>
+      <font size="3" color="ffffff" face="Noto Sans"><strong><p class="convert_result" style="text-align: center;">0</p></strong></font>
+      <select id="cur2" class="form-select" aria-label="Default select example" style="width: 80px; position: absolute !important; right: 15px; top: 100px; background-color: #111116; color: #ffffff; border-color: #6563EE;">
+          <option>АР</option>
+          <option>СТ.АР</option>
+          <option>ШК.АР</option>
+      </select>
+</div>
+
+
+</center>
+
+
+
+
+
+    
+    
+    <h6></h6>
+    <script type="text/javascript" src="get_close.js"></script>
+    <script type="text/javascript" src="get_open.js"></script>
+    <script type="text/javascript" src="converter.js"></script>
+  </body>
+</html>
+
