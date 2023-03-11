@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@rollup/plugin-typescript": "^10.0.1",
+    "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "rollup": "^3.9.0",
     "svelte-types-writer": "^1.2.0",
     "three": "^0.148.0"

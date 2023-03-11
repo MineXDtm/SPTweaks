@@ -20,7 +20,7 @@
     }
     .outline_sticker {
         position: absolute;
-        background-attachment:local;
+        background-attachment:scroll;
         -webkit-mask-position: center;
         -webkit-mask-size: contain;
         -webkit-mask-repeat: no-repeat;

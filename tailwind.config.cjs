@@ -2,7 +2,7 @@
 module.exports = {
   content: ['./src/**/**/*.{html,js,svelte,ts}'],
   theme: {
-
+   
     // screens:{
     //   "lg":{"max":"992px"},
     //   "md":{"max":"768px"},

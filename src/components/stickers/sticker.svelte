@@ -1,28 +1,37 @@
 <svelte:options accessors />
 
-<script>
+<script lang="typescript">
+   import { get_current_component } from "svelte/internal";
     import browser from "webextension-polyfill";
     export var outline_size = 0;
     export var src = "";
-    export var height = 118;
+    export var height = 118 ;
     export var title = "loading";
+    export var stickerid = "";
     export var width = 118;
+
     import { onMount } from "svelte";
     var outline_box;
-    var init = false;
+
     var gradient =
-        "linear-gradient(222deg, rgba(203,203,203,1) 0%, rgba(121,121,121,1) 55%, rgba(113,113,113,1) 100%)";
+        "   conic-gradient(from 170.95deg at 50% 50%, #402C59 -53.44deg, #2D2B51 53.77deg, #45425B 125.86deg, #67547A 240.95deg, #402C59 306.56deg, #2D2B51 413.77deg)";
     onMount(() => {
-        init = true;
+        renderhandler(thisComponent,stickerid);
+      
     });
     var sticker_box = undefined;
     var render = undefined;
+
+    const thisComponent = get_current_component();
+    export var renderhandler = (sticker,stickerid:string )=>{}
+    
+    
 </script>
 
 <div
     bind:this={sticker_box}
     style="height: {height + 'px'}; width: {width + 'px'};"
-    class="sticker tw-flex tw-justify-center tw-items-center tw-relative tw-m-auto"
+    class="sticker tw-flex tw-justify-center tw-items-center tw-relative"
 >
     {#if outline_size > 0 }
         <div
