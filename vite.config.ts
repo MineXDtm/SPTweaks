@@ -30,6 +30,7 @@ export default defineConfig({
       manifest: generateManifest,
       additionalInputs: [
         "src/stickers.ts",
+        "src/test.ts",
         "sptweaks.css",
         
       ]

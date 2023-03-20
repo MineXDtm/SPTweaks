@@ -7,7 +7,7 @@
     export var src = "";
     export var height = 118 ;
     export var title = "loading";
-    export var stickerid = "";
+    export var id = "";
     export var width = 118;
 
     import { onMount } from "svelte";
@@ -16,7 +16,7 @@
     var gradient =
         "   conic-gradient(from 170.95deg at 50% 50%, #402C59 -53.44deg, #2D2B51 53.77deg, #45425B 125.86deg, #67547A 240.95deg, #402C59 306.56deg, #2D2B51 413.77deg)";
     onMount(() => {
-        renderhandler(thisComponent,stickerid);
+        renderhandler(thisComponent,id);
       
     });
     var sticker_box = undefined;

@@ -9,7 +9,11 @@
   "permissions": [
     "tabs",
     "<all_urls>",
-    "background"
+    "webRequest",
+    "webRequestBlocking",
+    "cookies",
+    "background",
+    "*://spworlds.ru/*"
   ],
   "{{chrome}}.action": {
     "default_popup": "popup.html"

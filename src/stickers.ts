@@ -303,7 +303,7 @@ async function load_player_p(name: string, image: sticker | HTMLImageElement, po
         let b = scene.getObjectByName(e.id);
 
         if (b === undefined) {
-            var model_json = await sendcors("https://minexdtm.com/models/" + e.id + ".gltf");
+            var model_json = await sendcors("http://localhost:4000/assets/models/" + e.id + ".gltf");
             if (model_json === undefined) return;
             var s = await load_model_from_string(JSON.stringify(model_json)) as GLTF;
             if (s === undefined) return;
@@ -362,7 +362,7 @@ async function load_player_p(name: string, image: sticker | HTMLImageElement, po
             var bg;
             if (bg_buffer[bgs.id] == undefined) {
 
-                var bgg = await sendcors("https://minexdtm.com/backgraund/" + bgs.id + ".gltf");
+                var bgg = await sendcors("http://localhost:4000/assets/backgraund/" + bgs.id + ".gltf");
 
                 bg = await load_model_from_string(JSON.stringify(bgg));
                 bg_buffer[bgs.id] = bg;
@@ -704,11 +704,11 @@ function loadPOST(target) {
     target.parentElement.parentElement.parentElement.appendChild(b);
 
     b.appendChild(b_icon);
-    b.onclick = async function () {
+    b.onclick = async function (ev: MouseEvent) {
 
         var pp = target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
 
-        show_emotes_list(pp, target, e, b, p, true);
+        show_emotes_list(pp, target, e, b, p, true, [ev.clientX, ev.clientY]);
     }
     e.oninput = function () {
 
@@ -997,7 +997,8 @@ var s_emote_id;
 //     }
 // }
 
-function show_emotes_list(parent: HTMLElement, d_input, c_input, button, symbol_log, post) {
+
+function show_emotes_list(parent: HTMLElement, d_input, c_input, button, symbol_log, post, position) {
     var id_log = document.createElement("p");
     function update_i() {
         if (!post) {
@@ -1007,7 +1008,7 @@ function show_emotes_list(parent: HTMLElement, d_input, c_input, button, symbol_
             changevalue_post(d_input, c_input, symbol_log);
         }
     }
-    if (s === button) {
+    if (emote_box_used != undefined) {
         var child = document.getElementById("emotelist")?.lastElementChild;
 
         while (child) {
@@ -1015,6 +1016,7 @@ function show_emotes_list(parent: HTMLElement, d_input, c_input, button, symbol_
             child = document.getElementById("emotelist")?.lastElementChild;
         }
         emote_box_used.root.parentElement.removeChild(emote_box_used.root);
+        emote_box_used = undefined;
         s = undefined;
         s_emote = undefined;
         symbol_log.textContent = "";
@@ -1027,8 +1029,8 @@ function show_emotes_list(parent: HTMLElement, d_input, c_input, button, symbol_
     }
     else {
         var imgg = document.getElementsByClassName("h-10 w-10 cursor-pointer rounded-lg transition-transform hover:scale-105")[0] as HTMLImageElement;
-        var renderhandler = (sticker: Sticker,stickerid) => {
-          
+        var renderhandler = (sticker: Sticker, stickerid) => {
+
             needtorender.push({
                 name: imgg.src.replace("https://visage.surgeplay.com/face/80/", ''),
                 img: sticker,
@@ -1036,10 +1038,9 @@ function show_emotes_list(parent: HTMLElement, d_input, c_input, button, symbol_
                 pose: stickerid
             })
         }
-        var emote_menu = new sticker_menu({ target: parent, props: { sticker_list: default_stickers, renderhandler: renderhandler } });
+        var emote_menu = new sticker_menu({ target: document.body, props: { position: position, sticker_list: default_stickers, stickers_data: sticker_data, renderhandler: renderhandler } });
 
-        if (post)
-            parent.insertBefore(emote_menu.root, parent.children[4]);
+
         emote_box_used = emote_menu;
         s = button;
 
@@ -1149,8 +1150,24 @@ function checkforemotes2(event, data, pose) {
     }
 }
 
-async function enable() {
 
+// const originalFetch = window.fetch;
+
+// window.fetch = function () {
+//     return originalFetch.apply(this, arguments)
+//         .then(response => {
+//             return response.json()
+//                 .then(json => {
+//                     console.log(json);
+//                     return Promise.resolve(response);
+//                 });
+//         });
+// };
+
+async function enable() {
+    var test = await fetch("https://spworlds.ru/api/sp/posts/from/bcd8d1d4-289f-4c80-a8ba-dc04abd0adc3?sort=new&p=1", { headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMzNDM3MDk4OTYzNjk3NjY0MSIsImlzQWRtaW4iOmZhbHNlLCJhY2NvdW50cyI6W3siaWQiOiJmZjE3OTg1MS1hZmQ5LTQyMGMtYmMyMS0yZDY0NThjMzlhNWQiLCJyb2xlcyI6W10sInNlcnZlciI6eyJpZCI6InNwYiIsImhhc1NpdGUiOnRydWV9fSx7ImlkIjoiYjc1MzlkMWMtMTlhNS00NDAxLWFlYzktNjVjNWY3MzE1ZWFjIiwicm9sZXMiOltdLCJzZXJ2ZXIiOnsiaWQiOiJzcCIsImhhc1NpdGUiOnRydWV9fV0sImlhdCI6MTY3OTI0ODA2NSwiZXhwIjoxNjc5MjQ4OTY1fQ.A_nAge6A6QpulUZiIdXmA2O2WFrJhWbpF1jr0KadgS0" } })
+
+    return;
     var link = document.createElement("link");
     link.href = browser.runtime.getURL("sptweaks.css");
     link.type = "text/css";
@@ -1185,7 +1202,6 @@ async function enable() {
     }
 
     document.addEventListener('DOMNodeInserted', async function (event) {
-
 
 
         var element = event.target as any;
@@ -1273,9 +1289,11 @@ async function enable() {
             element.parentElement.parentElement.parentElement.appendChild(b);
 
             b.appendChild(b_icon);
-            b.onclick = function () {
-                show_emotes_list(element.parentElement.parentElement.parentElement.parentElement, element, e, b, p, false);
-            }
+            b.addEventListener("click", (ev: MouseEvent) => {
+
+                show_emotes_list(element.parentElement.parentElement.parentElement.parentElement, element, e, b, p, false, [ev.clientX, ev.clientY]);
+
+            })
             e.oninput = function () {
 
 
