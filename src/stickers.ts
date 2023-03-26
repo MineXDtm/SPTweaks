@@ -4,8 +4,6 @@ import sticker_menu from "./components/stickers/stickers_menu.svelte";
 import * as THREE from "three";
 import { type GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type Sticker from "./components/stickers/sticker.svelte";
-
-
 browser.runtime.onMessage.addListener((request) => {
 
     if (request.type == "contains_script") {
@@ -14,6 +12,8 @@ browser.runtime.onMessage.addListener((request) => {
 
     }
 });
+
+
 
 function waitForElm(selector) {
     return new Promise(resolve => {
@@ -46,7 +46,7 @@ async function serverdata_r() {
     const server_data = await fetch(`https://api.mcsrvstat.us/2/sp.spworlds.ru`)
         .then(response => response.json())
         .then(data => data);
-
+  
     const splash = document.getElementsByClassName("hidden md:block")[1].textContent
     if (server_data.players !== undefined) {
         const o = server_data.players.online;
@@ -733,6 +733,21 @@ function sendcors(url) {
     });
 }
 
+function take_token() {
+    return new Promise((resolve, reject) => {
+        browser.runtime.sendMessage({ type: "SHARE_TOKEN" }).then(response => {
+            if (response) {
+                resolve(response);
+            } else {
+                resolve(undefined)
+                console.log("token is undefined")
+
+            }
+        });
+    });
+}
+
+
 
 var bg_c = undefined;
 var bg_b: any;
@@ -1165,9 +1180,26 @@ function checkforemotes2(event, data, pose) {
 // };
 
 async function enable() {
-    var test = await fetch("https://spworlds.ru/api/sp/posts/from/bcd8d1d4-289f-4c80-a8ba-dc04abd0adc3?sort=new&p=1", { headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMzNDM3MDk4OTYzNjk3NjY0MSIsImlzQWRtaW4iOmZhbHNlLCJhY2NvdW50cyI6W3siaWQiOiJmZjE3OTg1MS1hZmQ5LTQyMGMtYmMyMS0yZDY0NThjMzlhNWQiLCJyb2xlcyI6W10sInNlcnZlciI6eyJpZCI6InNwYiIsImhhc1NpdGUiOnRydWV9fSx7ImlkIjoiYjc1MzlkMWMtMTlhNS00NDAxLWFlYzktNjVjNWY3MzE1ZWFjIiwicm9sZXMiOltdLCJzZXJ2ZXIiOnsiaWQiOiJzcCIsImhhc1NpdGUiOnRydWV9fV0sImlhdCI6MTY3OTI0ODA2NSwiZXhwIjoxNjc5MjQ4OTY1fQ.A_nAge6A6QpulUZiIdXmA2O2WFrJhWbpF1jr0KadgS0" } })
+    
+    // const targetNode = document.getElementById("content");
+    // targetNode.children[0].innerHTML = '';
+    // // Options for the observer (which mutations to observe)
+    // const config = { attributes: true, childList: true, subtree: true };
+    
+    // // Callback function to execute when mutations are observed
+    // const callback = (mutationList, observer) => {
+    //   for (const mutation of mutationList) {
+    //     if (mutation.attributeName === "class") {
+    //         targetNode.children[0].innerHTML = '';
+    //     } 
+    //   }
+    // };
+    // const observer = new MutationObserver(callback);
+    // observer.observe(targetNode, config);
 
-    return;
+
+
+
     var link = document.createElement("link");
     link.href = browser.runtime.getURL("sptweaks.css");
     link.type = "text/css";
@@ -1175,7 +1207,6 @@ async function enable() {
     document.getElementsByTagName("head")[0].appendChild(link);
 
     var Maininfo = await sendcors(`https://pastebin.com/raw/y4VEvKse`) as any;
-
     default_stickers = Maininfo.default_stickers;
     sticker_data = Maininfo.sticker_data;
     prefix = Maininfo.prefix;
@@ -1200,10 +1231,10 @@ async function enable() {
             pose: Maininfo.default_profile_icon
         })
     }
-
+  
     document.addEventListener('DOMNodeInserted', async function (event) {
 
-
+   
         var element = event.target as any;
         if (element.className === "mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60") {
 

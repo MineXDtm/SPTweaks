@@ -1,24 +1,32 @@
 
 import browser from "webextension-polyfill";
+
 browser.webRequest.onBeforeRequest.addListener(
-  function(details) {
- 
-      // Здесь вы можете обработать и изменить запрос
-      console.log(details.requestBody);
-    
+  function (details) {
+    //console.log(details);
+    if (details.url.includes("https://spworlds.ru/api/sp/posts") && !details.url.includes("sptweaks=true")) {
+      return { cancel: true }
+    }
   },
-  {urls: ["*://spworlds.ru/*"]},
-  ["requestBody"]
+  { urls: ["*://spworlds.ru/*"] },
+  ["blocking"]
 );
 
-var token = null;
-
+function getinfo(url) {
+  var h = new Headers();
+  return fetch(url)
+    .then(response => response)
+    .then(data => data);
+}
 browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+
   if (request.type == "CORS_HTTPREQUEST") {
+
     var info = getinfo(request.url).then(async (response) => {
 
       if (response.status === 404) {
         sendResponse(undefined);
+
       }
       else {
         var json = await response.json();
@@ -28,6 +36,7 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
   return true;
 });
+
 async function check_script(tabid) {
   return new Promise(async (resolve, reject) => {
 
@@ -49,49 +58,21 @@ async function check_script(tabid) {
 }
 
 browser.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
+  if (changeInfo.status === undefined || changeInfo.status !== undefined && changeInfo.status !== "complete") return;
 
-  
-  if (changeInfo.status !== undefined && changeInfo.status === "loading" && tab.url.includes("https://spworlds.ru") && !tab.url.includes("/spb")) {
+  if (!tab.url.includes("https://spworlds.ru") || tab.url.includes("https://spworlds.ru") && tab.url.includes("spb/")) return;
+  var tabs = await browser.tabs.query(
+    {
+      lastFocusedWindow: true,
+      active: true
+    });
+  var script_s = await check_script(tabId);
+
+  if (!script_s) {
 
     browser.tabs.executeScript({
-        file: 'src/test.js',
+      file: 'src/stickers.js',
     });
-  }
-  if (changeInfo.status !== undefined && changeInfo.status === "complete" && tab.url.includes("https://spworlds.ru") && !tab.url.includes("/spb")) {
-
-
-    var script_s = await check_script(tabId);
-
-    if (!script_s) {
-      var tabs = await browser.tabs.query(
-        {
-          lastFocusedWindow: true,
-          active: true
-        });
-
-      browser.cookies.onChanged.addListener(
-        (event) => {
-          if (event.cookie.domain == "spworlds.ru" && event.cookie.path == "/api/auth/refresh_token" && event.removed == false) {
-            token = event.cookie.value;
-
-          }
-        }
-      )
-
-      browser.tabs.executeScript({
-        file: 'src/assets/three.js',
-      });
-      browser.tabs.executeScript({
-        file: 'src/assets/three.js-master/examples/js/loaders/GLTFLoader.js',
-      });
-
-      browser.tabs.executeScript({
-        file: 'src/stickers.js',
-      });
-
-
-
-    }
 
 
 
@@ -99,20 +80,11 @@ browser.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
   // if(tab.url.includes("https://spworlds.ru") && tab.url.includes("users/")){
   //     browser.tabs.update(tabId, {url: tab.url});
   // }
-  if (tab.url.includes("lawsuits") && !tab.url.includes("lawsuits/")) {
-    browser.tabs.query(
-      {
-        lastFocusedWindow: true,
-        active: true
-      },
-      async function (tabs) {
 
-
-        browser.tabs.executeScript({
-          file: 'sude_plus.js'
-        });
-      });
-
+  if (tab.url.includes("/feed")) {
+    browser.tabs.executeScript({
+      file: 'src/feed.js'
+    });
 
   }
   else if (tab.url.includes("lawsuits/") && !tab.url.includes("/new")) {
