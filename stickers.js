@@ -257,7 +257,7 @@ async function load_player_p(name, image, pose, {backgraund, test,outline}={}) {
         let b = scene.getObjectByName(e.id);
 
         if (b === undefined) {
-            var model_json = await sendcors("https://minexdtm.com/models/" + e.id + ".gltf");
+            var model_json = await sendcors("https://services.minexdtm.com/assets/models/" + e.id + ".gltf");
             if (model_json === undefined) return;
             var s = await load_model_from_string(JSON.stringify(model_json));
             if (s === undefined) return;
@@ -316,7 +316,7 @@ async function load_player_p(name, image, pose, {backgraund, test,outline}={}) {
             var bg;
             if (bg_buffer[bgs.id] == undefined) {
 
-                var bgg = await sendcors("https://minexdtm.com/backgraund/" + bgs.id + ".gltf");
+                var bgg = await sendcors("https://services.minexdtm.com/assets/backgraund/" + bgs.id + ".gltf");
 
                 bg = await load_model_from_string(JSON.stringify(bgg));
                 bg_buffer[bgs.id] = bg;
