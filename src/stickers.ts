@@ -1,39 +1,17 @@
 import browser from "webextension-polyfill";
+
+import { default_check, sendcors, waitForElm } from "./SPTCore/utilities";
+
 import sticker from "./components/stickers/sticker.svelte";
 import sticker_menu from "./components/stickers/stickers_menu.svelte";
 import * as THREE from "three";
 import { type GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type Sticker from "./components/stickers/sticker.svelte";
 browser.runtime.onMessage.addListener((request) => {
+    return default_check(request, "stickers")
 
-    if (request.type == "contains_script") {
-
-        return Promise.resolve(true);
-
-    }
 });
 
-
-
-function waitForElm(selector) {
-    return new Promise(resolve => {
-        if (document.querySelector(selector)) {
-            return resolve(document.querySelector(selector));
-        }
-
-        const observer = new MutationObserver(mutations => {
-            if (document.querySelector(selector)) {
-                resolve(document.querySelector(selector));
-                observer.disconnect();
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    });
-}
 
 let scene;
 let camera;
@@ -46,7 +24,7 @@ async function serverdata_r() {
     const server_data = await fetch(`https://api.mcsrvstat.us/2/sp.spworlds.ru`)
         .then(response => response.json())
         .then(data => data);
-  
+
     const splash = document.getElementsByClassName("hidden md:block")[1].textContent
     if (server_data.players !== undefined) {
         const o = server_data.players.online;
@@ -718,34 +696,7 @@ function loadPOST(target) {
     }
 }
 
-function sendcors(url) {
-    return new Promise((resolve, reject) => {
-        browser.runtime.sendMessage({ type: "CORS_HTTPREQUEST", url: url }).then(response => {
-            if (response) {
 
-                resolve(response);
-            } else {
-                resolve(undefined)
-                console.log("no response")
-
-            }
-        });
-    });
-}
-
-function take_token() {
-    return new Promise((resolve, reject) => {
-        browser.runtime.sendMessage({ type: "SHARE_TOKEN" }).then(response => {
-            if (response) {
-                resolve(response);
-            } else {
-                resolve(undefined)
-                console.log("token is undefined")
-
-            }
-        });
-    });
-}
 
 
 
@@ -1180,12 +1131,12 @@ function checkforemotes2(event, data, pose) {
 // };
 
 async function enable() {
-    
+
     // const targetNode = document.getElementById("content");
     // targetNode.children[0].innerHTML = '';
     // // Options for the observer (which mutations to observe)
     // const config = { attributes: true, childList: true, subtree: true };
-    
+
     // // Callback function to execute when mutations are observed
     // const callback = (mutationList, observer) => {
     //   for (const mutation of mutationList) {
@@ -1231,10 +1182,10 @@ async function enable() {
             pose: Maininfo.default_profile_icon
         })
     }
-  
+
     document.addEventListener('DOMNodeInserted', async function (event) {
 
-   
+
         var element = event.target as any;
         if (element.className === "mx-auto h-24 w-24 flex-none rounded-3xl bg-primary pt-4 pr-2 pl-2 lg:h-60 lg:w-60") {
 

@@ -37,10 +37,10 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   return true;
 });
 
-async function check_script(tabid) {
+async function check_script(tabid,script_name) {
   return new Promise(async (resolve, reject) => {
 
-    var r = await browser.tabs.sendMessage(tabid, { type: "contains_script" }).then(results => {
+    var r = await browser.tabs.sendMessage(tabid, { type: "contains_script" ,script_name:script_name}).then(results => {
 
       if (results) {
 
@@ -66,7 +66,7 @@ browser.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
       lastFocusedWindow: true,
       active: true
     });
-  var script_s = await check_script(tabId);
+  var script_s = await check_script(tabId,"stickers");
 
   if (!script_s) {
 

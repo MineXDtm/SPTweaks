@@ -8,7 +8,7 @@
     var search = "";
     export let stickers_data;
     export let renderhandler = (sticker: Sticker, stickerid: string) => {};
-    export let root : HTMLElement;
+    let root : HTMLElement;
     export let  position = [0,0];
     var expand_position = [0,0];
     function ScreenFit(){

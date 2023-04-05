@@ -24,6 +24,7 @@ function generateManifest() {
 export default defineConfig({
   plugins: [
     svelte(),
+    
     webExtension({
       assets: "src/assets",
       webExtConfig: loadWebExtConfig(),
