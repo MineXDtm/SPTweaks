@@ -1,2 +1,4 @@
 
 poses/New World (2)/advancements/266f26f1-5111-4cc0-9f08-8fd2298df61d.json
+dist/*
+node_modules/*
