@@ -32,6 +32,9 @@ var needtorender = []
 let renderer;
 var obj;
 async function serverdata_r() {
+    //данный скрипт отключен по причине не возможности сапортить данный функционал на данный момент.
+    //а если нормальным языком то я хер знает какой class у сплеша на сайте у меня щас нет доступа.
+    return;
     const server_data = await fetch(`https://api.mcsrvstat.us/2/sp.spworlds.ru`)
         .then(response => response.json())
         .then(data => data);
