@@ -1,4 +1,4 @@
-# SPtweaks
+# SPTweaks
 
 **Билды этого бренча крайне не стабильны и не рекомендованы к использованию!!!!!!!**
 
@@ -19,4 +19,4 @@
 
 
 
-![alt text](https://media.discordapp.net/attachments/708742470057328671/997164478124798012/-2.png?width=1015&height=571)
+![alt text](https://imgur.com/K8KonTo.png)
