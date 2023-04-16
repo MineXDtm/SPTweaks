@@ -30,8 +30,7 @@ export default defineConfig({
       webExtConfig: loadWebExtConfig(),
       manifest: generateManifest,
       additionalInputs: [
-        "src/stickers.ts",
-        "src/feed.ts",
+        "src/sptweaks_client.ts",
         "sptweaks.css",
         
       ]

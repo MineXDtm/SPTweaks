@@ -23,7 +23,7 @@ module.exports = {
 
     }
   },
-  prefix: 'tw-',
+  prefix: 'spt-',
   important: true,
   plugins: [],
 }

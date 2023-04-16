@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base{
+    body{
+        font-family: 'SegoeUI'; 
+        color: black;
+    }
+
+}
 @layer components{
+
     .backgraund_choose{
         height: 50px;
         width: auto;
@@ -28,4 +36,10 @@
         margin: auto;
         border-radius: 15px;
     }
+}
+@font-face {
+    font-family: 'SegoeUI'; 
+    src: url('./src/assets/fonts/SegoeUI.ttf'); 
+    
+    
 }
