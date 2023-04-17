@@ -3,6 +3,8 @@ import webExtension, { readJsonFile } from "vite-plugin-web-extension";
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { resolve } from "path";
 import typescript from '@rollup/plugin-typescript';
+ 
+
 function loadWebExtConfig() {
   try {
     return require("./.web-ext.config.json");
@@ -21,19 +23,27 @@ function generateManifest() {
     ...manifest,
   };
 }
+
 export default defineConfig({
+  build:{
+    assetsDir:'./src/assets'
+  },
+  server: {
+    open:false,
+  },
   plugins: [
     svelte(),
     
     webExtension({
-      assets: "src/assets",
+      assets: "./src/assets",
       webExtConfig: loadWebExtConfig(),
       manifest: generateManifest,
       additionalInputs: [
         "src/sptweaks_client.ts",
         "sptweaks.css",
         
-      ]
+      ],
+     
     }),
     typescript()
   ]
