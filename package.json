@@ -27,6 +27,7 @@
   "dependencies": {
     "@rollup/plugin-typescript": "^10.0.1",
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "puppeteer": "^19.7.5",
     "request-promise-native": "^1.0.9",
     "rollup": "^3.9.0",

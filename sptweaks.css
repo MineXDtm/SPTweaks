@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
+/* @layer base{
     body{
         font-family: 'SegoeUI'; 
         color: black;
     }
 
-}
+} */
 @layer components{
 
     .backgraund_choose{
@@ -36,10 +36,14 @@
         margin: auto;
         border-radius: 15px;
     }
+
+    .vote_button_main{
+        @apply spt-w-[70px] spt-h-[28px]  spt-pl-[9px] spt-pr-[9px] spt-rounded-[5px] spt-flex spt-justify-center spt-items-center spt-space-x-[7px];
+    }
 }
-@font-face {
+/* @font-face {
     font-family: 'SegoeUI'; 
-    src: url('./src/assets/fonts/SegoeUI.ttf'); 
+    src: url('/SegoeUI.ttf'); 
     
     
-}
+} */

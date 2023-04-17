@@ -20,10 +20,10 @@ var user_data  : {token: String, user: Object} | null  = null;
 async function enable() {
   
     const request_user_data = await fetch("https://spworlds.ru/api/auth/refresh_token",{method: "POST"}).then((response ) =>response.json());
-    window.addEventListener('beforeunload', function(event) {
-        event.preventDefault();  // prevent the default behavior of the event
-        event.returnValue = '';  // specify an empty string for modern browsers
-      });
+    // window.addEventListener('beforeunload', function(event) {
+    //     event.preventDefault();  // prevent the default behavior of the event
+    //     event.returnValue = '';  // specify an empty string for modern browsers
+    //   });
     if(request_user_data.token != undefined )user_data = request_user_data;
     
     document.head.innerHTML = "";
@@ -49,7 +49,7 @@ async function enable() {
 
    
         var element = event.target as any;
-        console.log("test");
+        //console.log("test");
 
     })
 }

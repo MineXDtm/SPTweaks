@@ -20,7 +20,7 @@
   "{{firefox}}.browser_action": {
     "default_popup": "popup.html"
   },
-  "web_accessible_resources": ["src/assets/*","sptweaks.css"],
+  "web_accessible_resources": ["src/assets/*","sptweaks.css","SegoeUI.ttf"],
   "background": {
     "{{chrome}}.service_worker": "vizualno_ronunru.js",
     "{{firefox}}.scripts": [
