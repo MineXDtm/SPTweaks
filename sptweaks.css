@@ -38,7 +38,7 @@
     }
 
     .vote_button_main{
-        @apply spt-w-[70px] spt-h-[28px]  spt-pl-[9px] spt-pr-[9px] spt-rounded-[5px] spt-flex spt-justify-center spt-items-center spt-space-x-[7px];
+        @apply spt-w-[78px] spt-h-[28px]  spt-pl-[9px] spt-pr-[9px] spt-rounded-[5px] spt-flex spt-justify-center spt-items-center spt-space-x-[7px];
     }
 }
 /* @font-face {

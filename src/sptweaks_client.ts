@@ -31,7 +31,7 @@ async function enable() {
     const link = document.createElement("link");
     link.rel = "icon";
     link.type = "image/png";
-    link.href = browser.runtime.getURL("src/assets/icons/icon.png");
+    link.href = browser.runtime.getURL("src/assets/logo/icon.png");
     document.head.appendChild(link);
     var css = document.createElement("link");
     css.href = browser.runtime.getURL("sptweaks.css");
