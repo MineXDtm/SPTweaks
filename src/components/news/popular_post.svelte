@@ -1,7 +1,6 @@
 <script lang="typescript">
-    import browser from "webextension-polyfill";
     export let left = 0;
-    import { fade } from 'svelte/transition';
+    import VoteButtons from "../actions/vote_buttons.svelte";
     export let selected = false;
     export let image = "";
     export let limit = 0;
@@ -107,16 +106,9 @@
                     
                 </div>
                 <div class="spt-flex  spt-items-end spt-grow">
-                    <div class="spt-flex-col spt-space-y-[6px]">
-                        <div class="vote_button_main spt-bg-[#4D4DB1]/[0.65] spt-cursor-pointer ">
-                            <img draggable="false" class="spt-select-none" src="{browser.runtime.getURL("src/assets/icons/upvote.svg")}" />
-                            <p class="spt-text-white spt-text-[14px] spt-w-full spt-text-center spt-font-semibold spt-select-none">999</p>
-                        </div>
-                        <div  class="vote_button_main spt-bg-[#ffffff]/25 spt-cursor-pointer ">
-                            <img draggable="false" class="spt-select-none" src="{browser.runtime.getURL("src/assets/icons/downvote.svg")}" />
-                            <p class="spt-text-white spt-text-[14px] spt-w-full spt-font-semibold  spt-text-center spt-select-none">7</p>
-                        </div>
-                    </div>
+
+                       <VoteButtons/>
+              
                 </div>
             </div>
      

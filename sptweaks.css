@@ -2,13 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer base{
+@layer base{
     body{
-        font-family: 'SegoeUI'; 
-        color: black;
+        /* font-family: 'SegoeUI';  */
+        color: white;
+ 
     }
 
-} */
+}
 @layer components{
 
     .backgraund_choose{
