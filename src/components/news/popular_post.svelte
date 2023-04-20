@@ -106,8 +106,11 @@
                     
                 </div>
                 <div class="spt-flex  spt-items-end spt-grow">
-
-                       <VoteButtons/>
+                        <div class="spt-flex spt-flex-row spt-space-x-[10px] spt-items-center">
+                            <p>45</p>
+                            <VoteButtons/>
+                        </div>
+                
               
                 </div>
             </div>
