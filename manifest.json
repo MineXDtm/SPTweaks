@@ -4,7 +4,7 @@
   "description": "твикер для сайта проекта #SPWorlds. Переродился из личного проекта для удаления закрытых дел на суд.",
   "version": "2.0",
   "icons": {
-    "48": "src/assets/icons/icon.png"
+    "48": "src/assets/logo/icon.png"
   },
   "permissions": [
     "tabs",
