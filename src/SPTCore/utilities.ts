@@ -16,6 +16,40 @@ const sendcors = (url) =>{
     });
 }
 
+//сет глобального буфера
+const setbuffer = (buffer_name,value) =>{
+    return new Promise((resolve, reject) => {
+        browser.runtime.sendMessage({ type: "SET_BUFFER", buffer_name , value}).then(response => {
+            if (response) {
+
+                resolve(response);
+            } else {
+                resolve(undefined)
+                console.log("no response")
+
+            }
+        });
+    });
+}
+
+//получения глобального буффера
+const getbuffer = (buffer_name) =>{
+    return new Promise((resolve, reject) => {
+        browser.runtime.sendMessage({ type: "GET_BUFFER", buffer_name }).then(response => {
+            if (response) {
+
+                resolve(response);
+            } else {
+                resolve(undefined)
+                console.log("no response")
+
+            }
+        });
+    });
+}
+
+
+
 //отключение скрипта
 const exit = ( status ) => {
     var i;
@@ -78,4 +112,4 @@ const default_check = (request,script_name)=>{
     }
 }
 
-export {sendcors,default_check,waitForElm,exit};
+export {sendcors,default_check,waitForElm,exit,setbuffer,getbuffer};

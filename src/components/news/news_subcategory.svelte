@@ -1,34 +1,96 @@
 <script>
     import MiniPost from "./mini_post.svelte";
+    import browser, { action } from "webextension-polyfill";
+
+    import { isdragging } from '/src/stores/main.js';
+
+    export var name = "Рекомендации";
+    export var posts = [];
+
+    let startX = 0;
+    let startScrollLeft = 0;
+    let lastScrollLeft = 0;
+    let speed = 0;
+    let rafId = null;
+    var scollable = undefined;
+  
+    var ismoved = false;
+
+    function handleMouseDown(event) {
+        startX = event.clientX;
+        startScrollLeft = scollable.scrollLeft;
+        document.getSelection().removeAllRanges();
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+
+    }
+
+    function handleMouseMove(event) {
+        const dx = event.clientX - startX;
+        document.body.classList.add("isdragging");
+    
+        isdragging.set(true);
+        scollable.scrollLeft = startScrollLeft - dx;
+        ismoved = true;
+        // Рассчитываем скорость перемещения мыши
+        speed = dx - lastScrollLeft;
+        lastScrollLeft = dx;
+    }
+
+    function handleMouseUp() {
+   
+        document.body.classList.remove("isdragging");
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleMouseUp);
+        isdragging.set(false);
+       
+        if (!rafId && ismoved) {
+            rafId = requestAnimationFrame(scrollWithSpeed);
+            ismoved =false;
+        }
+    }
+
+    function scrollWithSpeed() {
+        if($isdragging){
+            rafId = undefined;
+            speed = 0;
+            return;
+        };
+        const speedFactor = Math.min(Math.abs(speed), 5);
+        scollable.scrollLeft -= speed * speedFactor;
+
+        // Останавливаем скроллирование, когда скорость падает до нуля
+        if (Math.abs(speed) > 1) {
+            speed *= 0.95;
+            rafId = requestAnimationFrame(scrollWithSpeed);
+        } else {
+            rafId = null;
+        }
+    }
     
 </script>
-<div>
-    <p class="spt-text-[24px] spt-font-bold">Рекомендации</p>
-    <div
-        class="spt-inline-flex spt-overflow-x-auto spt-space-x-[25px] spt-w-full spt-pr-[15px] spt-pl-[15px] spt-pt-[25px] spt-pb-[25px]">
-        <MiniPost image={'https://media.discordapp.net/attachments/976019782434455572/1097957174820479016/image.png?width=1130&height=585'}
-            text={`
-                Приглашаю вас на долгожданное торжество в честь открытия нового проекта Дом Искусств х ТФ Искусств!
-                - Вечер чтения и музыки
-                - Выставка артов
-                =Ждём вас уже в эту пятницу, 24 марта, в 19:00!=
-                =МЕСТО: СПАВН ПО КОВРИКАМ (Там где музей артов и Дом Искусств)=
-                Заходите в дискорд, чтобы поучавствовать в ивенте!
-                - https://discord.gg/czG3pJK8
-            `}
-        />
-        <MiniPost image={''}
-            text={`
-                Приглашаю вас на долгожданное торжество в честь открытия нового проекта Дом Искусств х ТФ Искусств!
-                - Вечер чтения и музыки
-                - Выставка артов
-                =Ждём вас уже в эту пятницу, 24 марта, в 19:00!=
-                =МЕСТО: СПАВН ПО КОВРИКАМ (Там где музей артов и Дом Искусств)=
-                Заходите в дискорд, чтобы поучавствовать в ивенте!
-                - https://discord.gg/czG3pJK8
-            `}
-        />
-        <MiniPost image={'https://media.discordapp.net/attachments/976019782434455572/1097957174820479016/image.png?width=1130&height=585'}/>
-    </div>
 
+
+
+<div class="spt-relative spt-flex spt-flex-col spt-shrink-0  spt-pt-[15px] spt-pb-[15px] spt-pr-[25px] spt-pl-[25px]   "  on:mousedown={handleMouseDown} >
+    <p class="spt-text-[24px] spt-font-bold">{name}</p>
+    <div class="spt-w-full  spt-h-full spt-absolute spt-top-0 spt-left-0  spt-rounded-[15px]"  />
+    <div
+        bind:this={scollable}
+ 
+        class="spt-inline-flex spt-overflow-hidden spt-space-x-[25px] spt-w-full spt-grow spt-pr-[15px] spt-pl-[15px] spt-pt-[25px] spt-pb-[25px]"
+    >
+        {#each posts as  post}
+            <MiniPost
+                upvotes={post.upvotes}
+                downvotes={post.downvotes}
+                image={post.image != undefined? 'https://storage.yandexcloud.net/spworlds/images/posts/'+post.image +'.webp':''}
+                text={post.text}
+                minecraftuuid={post.minecraftUUID}
+            />
+        {/each}
+
+ 
+ 
+    </div>
 </div>

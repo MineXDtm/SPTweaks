@@ -2,7 +2,7 @@
 import browser from "webextension-polyfill";
 
 
-
+const global_buffer = {}
 const tabs_urls = []
 browser.webRequest.onBeforeRequest.addListener(
   function (details) {
@@ -33,7 +33,6 @@ browser.webRequest.onBeforeRequest.addListener(
 
 
 function getinfo(url) {
-  var h = new Headers();
   return fetch(url)
     .then(response => response)
     .then(data => data);
@@ -53,6 +52,16 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         sendResponse(json);
       }
     });
+  }
+  else if (request.type == "SET_BUFFER") {
+
+    global_buffer[request.buffer_name] = request.value;
+
+    return true;
+  }
+  else if (request.type == "GET_BUFFER") {
+    const buffer =  global_buffer[request.buffer_name];
+    sendResponse(buffer) ;
   }
   return true;
 });

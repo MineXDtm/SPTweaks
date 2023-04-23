@@ -24,6 +24,6 @@ module.exports = {
     }
   },
   prefix: 'spt-',
-  important: true,
+  important: false,
   plugins: [require('@tailwindcss/line-clamp')],
 }
