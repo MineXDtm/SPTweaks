@@ -44,7 +44,7 @@
     .isdragging *  {
         @apply !spt-select-none !spt-cursor-none !important;
     }
- 
+     
 }
 /* @font-face {
     font-family: 'SegoeUI'; 

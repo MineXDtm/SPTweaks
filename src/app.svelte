@@ -15,9 +15,10 @@
     window.location.hash = "news";
 
     onMount(async ()=>{
+        return;
         var buffer_popular = await getbuffer("popular_posts");
         var buffer_new = await getbuffer("new_posts");
-        console.log(buffer_popular)
+        
         if(buffer_popular == undefined){
             var request_popular_posts = await http_spworlds('https://spworlds.ru/api/sp/posts?sort=popular&source=all&p=1');
             if(request_popular_posts == undefined)return;
@@ -46,9 +47,14 @@
             <img draggable="false" width="200" height="50" src={browser.runtime.getURL("src/assets/logo/SPTweaks_full_name_white.svg")} alt="logo" class="spt-mr-[10px]">
       
         </header>
-        <div id="content" class="spt-w-full spt-flex spt-space-y-[50px] spt-flex-col spt-overflow-y-auto spt-flex-grow spt-pl-[80px] spt-pr-[80px] spt-pb-[10px] spt-pt-[10px]  " >
-             <MostPopular posts={popular_posts}/>
-             <NewsSubcategory posts={new_posts} name="Новые"/>
+        <div id="content" class="spt-w-full spt-flex spt-space-y-[50px] spt-flex-col spt-overflow-y-auto spt-flex-grow spt-pl-[80px] spt-pr-[80px] spt-pb-[10px] spt-pt-[10px]  spt-rounded-[15px]" >
+             
+            <MostPopular posts={popular_posts}/>
+            <div class="spt-w-full spt-h-[50px] spt-shrink-0 spt-flex spt-flex-row ">
+                <input placeholder="Поиск в последних постах..." class="spt-w-[400px] spt-h-full spt-bg-white/10 spt-flex spt-items-center spt-rounded-[15px] spt-pr-[25px] spt-pl-[25px] spt-pt-[5px] spt-pb-[5px] placeholder:spt-text-white/25 focus:spt-outline-none" />
+                   
+             </div>
+            <NewsSubcategory posts={new_posts} name="Новые"/>
         </div>
         <div class="spt-flex spt-space-x-2">
             <p class="spt-text-[16px] spt-text-white/20">

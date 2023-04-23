@@ -15,7 +15,7 @@ browser.runtime.onMessage.addListener((request) => {
 
 
 var user_data  : {token: String, user: Object} | null  = null;
-
+ 
 function http_spworlds(url){
     return new Promise(async (resolve,reject)=>{
         const response = await fetch(url,{headers:{'Authorization': 'Bearer '+user_data.token,'SPTweaks':'true'}})

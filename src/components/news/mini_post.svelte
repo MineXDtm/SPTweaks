@@ -53,12 +53,12 @@
                         <VoteButtons {upvotes} {downvotes} />
                     </div>
                 </div>
-                <div class="spt-grow spt-h-full spt-overflow-hidden spt-flex spt-items-center spt-flex-col">
+                <div class="spt-grow spt-h-full spt-overflow-hidden spt-flex spt-justify-center spt-flex-col">
                     {#if json != undefined}
                         {#each json.content as node}
                             {#if node.type === "paragraph"}
                                 <p
-                                    class="spt-shrink-0  spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full spt-overflow-hidden spt-font-medium"
+                                    class="spt-shrink-0  spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full  spt-h-fit  spt-max-h-full  spt-overflow-hidden spt-font-medium placeholder:spt-text-red-600"
                                 >
                                     {#if node.content != undefined}
                                         {#each node.content as textNode}
@@ -70,7 +70,7 @@
                         {/each}
                     {:else}
                         <p
-                            class=" spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full spt-overflow-hidden spt-font-medium "
+                            class=" spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full spt-h-fit  spt-max-h-full spt-overflow-hidden spt-font-medium "
                         >
                             {text}
                         </p>
