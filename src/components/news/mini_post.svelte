@@ -54,11 +54,39 @@
                     </div>
                 </div>
                 <div class="spt-grow spt-h-full spt-overflow-hidden spt-flex spt-justify-center spt-flex-col">
+                    <div class="spt-h-fit  spt-max-h-full">
+                        {#if json != undefined}
+                            {#each json.content as node}
+                                {#if node.type === "paragraph"}
+                                    <p
+                                        class="spt-shrink-0  spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full   spt-overflow-hidden spt-font-medium "
+                                    >
+                                        {#if node.content != undefined}
+                                            {#each node.content as textNode}
+                                                {textNode.text}
+                                            {/each}
+                                        {/if}
+                                    </p>
+                                {/if}
+                            {/each}
+                        {:else}
+                            <p
+                                class=" spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full  spt-font-medium "
+                            >
+                                {text}
+                            </p>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        {:else}
+            <div class=" spt-absolute spt-w-[290px] spt-h-[281px] spt-flex spt-flex-col spt-items-center spt-justify-center">
+                <div class="spt-h-fit  spt-max-h-full spt-overflow-auto">
                     {#if json != undefined}
                         {#each json.content as node}
                             {#if node.type === "paragraph"}
                                 <p
-                                    class="spt-shrink-0  spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full  spt-h-fit  spt-max-h-full  spt-overflow-hidden spt-font-medium placeholder:spt-text-red-600"
+                                    class="spt-text-[16px] spt-w-full spt-select-none spt-cursor-pointer  spt-font-medium spt-break-words  "
                                 >
                                     {#if node.content != undefined}
                                         {#each node.content as textNode}
@@ -70,36 +98,12 @@
                         {/each}
                     {:else}
                         <p
-                            class=" spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full spt-h-fit  spt-max-h-full spt-overflow-hidden spt-font-medium "
+                            class="spt-text-[16px] spt-w-full spt-select-none spt-cursor-pointer  spt-font-medium spt-break-words"
                         >
                             {text}
                         </p>
                     {/if}
-                </div>
-            </div>
-        {:else}
-            <div class=" spt-absolute spt-w-[290px] spt-h-[281px] spt-flex spt-flex-col spt-items-center spt-justify-center">
-                {#if json != undefined}
-                    {#each json.content as node}
-                        {#if node.type === "paragraph"}
-                            <p
-                                class="spt-text-[16px] spt-select-none spt-cursor-pointer  spt-font-medium spt-flex spt-items-center spt-justify-center "
-                            >
-                                {#if node.content != undefined}
-                                    {#each node.content as textNode}
-                                        {textNode.text}
-                                    {/each}
-                                {/if}
-                            </p>
-                        {/if}
-                    {/each}
-                {:else}
-                    <p
-                        class="spt-text-[16px] spt-select-none spt-cursor-pointer spt-absolute spt-w-[290px] spt-h-[281px] spt-font-medium "
-                    >
-                        {text}
-                    </p>
-                {/if}
+                </div> 
             </div>
            
 
