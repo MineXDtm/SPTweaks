@@ -35,13 +35,13 @@ export default defineConfig({
     svelte(),
     
     webExtension({
+    
       assets: "./src/assets",
       webExtConfig: loadWebExtConfig(),
       manifest: generateManifest,
       additionalInputs: [
         "src/sptweaks_client.ts",
-        "sptweaks.css",
-        
+       
       ],
      
     }),

@@ -22,7 +22,8 @@
   },
   "web_accessible_resources": ["src/assets/*","sptweaks.css","SegoeUI.ttf"],
   "background": {
-    "{{chrome}}.service_worker": "vizualno_ronunru.js",
+    "{{chrome}}.scripts": ["vizualno_ronunru.js"],
+    "persistent": true ,
     "{{firefox}}.scripts": [
       "vizualno_ronunru.js"
     ]

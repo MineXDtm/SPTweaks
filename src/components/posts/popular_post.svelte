@@ -1,0 +1,142 @@
+<script>
+    import {  next_page } from "/src/stores/categories.js";
+    import { isdragging } from '/src/stores/main.js';
+    import VoteButtons from "../actions/vote_buttons.svelte";
+
+    export var image = "";
+    export var text = "";
+    export var minecraftuuid = "X-Steve";
+
+    var json = undefined;
+    try {
+        json = JSON.parse(text);
+    } catch (e) {}
+
+    export var upvotes = 1;
+    export var downvotes = 1;
+ 
+    export var index = 0;
+    export var post_id = "";
+
+    var hover_text_bar = false;
+    var can_interact = false;
+    isdragging.subscribe(value => {
+        if(can_interact)can_interact = !value;
+        else{
+            setTimeout(
+                ()=>{can_interact = !$isdragging; },100
+            )
+        }
+        
+
+    });
+
+</script>
+
+<div class=" spt-shrink-0  spt-w-[745px] spt-h-[540px]"  >
+    <div
+        class="spt-relative spt-w-full spt-h-full spt-overflow-hidden spt-flex spt-justify-center spt-items-center spt-rounded-[15px]"
+    >
+        <div
+            class="spt-absolute spt-grow-0 spt-shrink-0 spt-w-[110%] spt-max-w-[110%] spt-h-[110%] spt-blur-[10px]"
+            style="background: conic-gradient(from 224.85deg at 75.71% 23.9%, #967CE0 -106.88deg, #B8B8B8 31.88deg, #C68FF3 153.75deg, #967CE0 253.13deg, #B8B8B8 391.87deg);"
+        />
+ 
+        <div
+         
+            class="spt-absolute spt-grow-0 spt-shrink-0 spt-w-[110%] spt-max-w-[110%] spt-h-[110%] spt-blur-[10px] spt-bg-black/25"
+        />
+        
+        {#if image != ""}
+            <img
+                src={image}
+                draggable="false"
+                class="spt-w-full  spt-pointer-events-none  spt-h-full spt-absolute spt-top-0 spt-object-cover spt-mb-[23px]"
+            />
+
+          
+        {:else}
+            <div class=" spt-absolute spt-w-[400px] spt-h-[330px] spt-flex spt-flex-col spt-items-center spt-justify-center">
+                <div class="spt-h-fit  spt-max-h-full spt-overflow-auto">
+                    {#if json != undefined}
+                        {#each json.content as node}
+                            {#if node.type === "paragraph"}
+                                <p
+                                    class="spt-text-[16px] spt-w-full spt-select-none spt-cursor-pointer  spt-font-medium spt-break-words  "
+                                >
+                                    {#if node.content != undefined}
+                                        {#each node.content as textNode}
+                                            {textNode.text}
+                                        {/each}
+                                    {/if}
+                                </p>
+                            {/if}
+                        {/each}
+                    {:else}
+                        <p
+                            class="spt-text-[16px] spt-w-full spt-select-none spt-cursor-pointer  spt-font-medium spt-break-words"
+                        >
+                            {text}
+                        </p>
+                    {/if}
+                </div> 
+            </div>
+           
+
+      
+        {/if}
+        <div    on:click={()=>{if(!can_interact)return; next_page("feed"); }} class="spt-absolute spt-w-full spt-h-full spt-cursor-pointer" />
+        <div class="spt-absolute spt-transition-all spt-duration-300 {hover_text_bar? '!spt-h-[90%]' : 'spt-h-[113px] '} spt-bottom-[19px] spt-left-[17px] spt-flex spt-items-end spt-flex-row spt-space-x-[10px]"  >
+
+            
+
+            <VoteButtons {upvotes} {downvotes} />
+            {#if image != "" && text.length > 0}
+                <div
+                    on:mouseenter={()=>{if($isdragging)return; hover_text_bar=true}}
+                    on:mouseleave={()=>{hover_text_bar=false}}
+                   
+                    class="spt-flex spt-rounded-[15px] spt-w-[408px] spt-backdrop-blur-sm spt-h-full  spt-bg-black/80 spt-pr-[25px] spt-pl-[25px] spt-pb-[15px] spt-pt-[15px]" 
+                >
+                    <div class="spt-grow spt-h-full spt-overflow-hidden spt-flex spt-justify-center spt-flex-col">
+                        <div class="spt-h-fit  spt-max-h-full">
+                            {#if json != undefined}
+                                {#each json.content as node}
+                                    {#if node.type === "paragraph"}
+                                        <p
+                                            class="spt-shrink-0  spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full   spt-overflow-hidden spt-font-medium "
+                                        >
+                                            {#if node.content != undefined}
+                                                {#each node.content as textNode}
+                                                    {textNode.text}
+                                                {/each}
+                                            {/if}
+                                        </p>
+                                    {/if}
+                                {/each}
+                            {:else}
+                                <p
+                                    class=" spt-text-[16px] spt-select-none spt-cursor-pointer spt-w-full  spt-font-medium "
+                                >
+                                    {text}
+                                </p>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            {/if}
+        </div>
+    
+        <div
+            class="spt-absolute spt-rounded-[12px] spt-left-[17px] spt-top-[15px] spt-pr-[9px] spt-pl-[9px] spt-pb-[7px] spt-pt-[7px] spt-bg-black/30"
+        >
+            <img
+                draggable="false"
+                class="spt-rounded-[12px] spt-select-none"
+                src="https://visage.surgeplay.com/face/80/{minecraftuuid}.png"
+                height="54"
+                width="54"
+            />
+        </div>
+    </div>
+</div>

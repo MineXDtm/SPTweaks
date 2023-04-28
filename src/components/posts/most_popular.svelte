@@ -3,8 +3,9 @@
     import browser, { action } from "webextension-polyfill";
 
     import { isdragging } from '/src/stores/main.js';
+    import PopularPost from "./popular_post.svelte";
 
-    export var name = "Рекомендации";
+ 
     export var posts = [];
 
     let startX = 0;
@@ -72,8 +73,8 @@
 
 
 
-<div class="spt-relative spt-flex spt-flex-col spt-shrink-0  spt-pt-[15px] spt-pb-[15px] spt-pr-[25px] spt-pl-[25px]   "  on:mousedown={handleMouseDown} >
-    <p class="spt-text-[24px] spt-font-bold">{name}</p>
+<div class="spt-relative spt-flex spt-flex-col spt-shrink-0    spt-pr-[25px] spt-pl-[25px]   "  on:mousedown={handleMouseDown} >
+    <p class="spt-text-[32px] spt-font-bold">Популярные</p>
     <div class="spt-w-full  spt-h-full spt-absolute spt-top-0 spt-left-0  spt-rounded-[15px]"  />
     <div
         bind:this={scollable}
@@ -81,11 +82,12 @@
         class="spt-inline-flex spt-overflow-hidden spt-space-x-[25px] spt-w-full spt-grow spt-pr-[15px] spt-pl-[15px] spt-pt-[25px] spt-pb-[25px]"
     >
         {#each posts as  post}
-            <MiniPost
+            <PopularPost
                 upvotes={post.upvotes}
                 downvotes={post.downvotes}
                 image={post.image != undefined? 'https://storage.yandexcloud.net/spworlds/images/posts/'+post.image +'.webp':''}
                 text={post.text}
+        
                 minecraftuuid={post.minecraftUUID}
             />
         {/each}

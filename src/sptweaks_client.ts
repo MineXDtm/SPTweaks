@@ -47,21 +47,23 @@ async function enable() {
     meta.name = "viewport";
     meta.content = "width=device-width, initial-scale=1";
     document.head.appendChild(meta);
-
     var css = document.createElement("link");
     css.href = browser.runtime.getURL("sptweaks.css");
     css.type = "text/css";
     css.rel = "stylesheet";
+    css.addEventListener('load', () => {
+        const app = new App({target:document.body,props: {
+        
+            http_spworlds_: http_spworlds,
+            setbuffer_: setbuffer,
+            getbuffer_:getbuffer
+    
+        }});
+    });
     document.head.appendChild(css);
+  
     //window.history.pushState({"pageTitle":"СП Домашняя Страничка"},"", "home");
-    const app = new App({target:document.body,props: {
-		// assuming App.svelte contains something like
-		// `export let answer`:
-		http_spworlds,
-        setbuffer,
-        getbuffer
-
-	}});
+  
     
     //var p = new Mostpopular({target:targetNode.children[0]});
     //var test = await fetch("https://spworlds.ru/api/sp/posts?sptweaks=true", { headers: { Authorization: "Bearer " + user_data.token}}).then((response ) =>response.json());
