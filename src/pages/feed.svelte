@@ -14,8 +14,9 @@
     var target;
  
     var min_to_slide =100;
-    var max_to_slide = 500;
-    var slide_smooth = 250;
+    var max_to_slide = 400;
+    var slide_smooth = 100;
+    var anchor_smooth = 200;
 
     var scroll_y = tweened(0);
 
@@ -29,17 +30,29 @@
     let direction = "";
     let distance = 0;
     var prev = undefined;
-    function handleMouseDown(event) {
-        scroll_y = tweened(0);
-        mousePressed = true;
-        startY = event.clientY;
-        document.body.addEventListener("mouseup", handleMouseUp);
-        document.body.classList.add("isdragging");
-    }
     var last_distance = -1;
     var last_direction = "";
+    var cooldown_up = false;
+    var cooldown_direction = false;
+    var first_down = false;
+
+
+    function handleMouseDown(event) {
+        if(cooldown_up||cooldown_direction)return;
+        scroll_y = tweened(0);
+        mousePressed = true;
+        first_down = true;
+        startY = event.clientY;
+        document.body.addEventListener("mouseup", handleMouseUp);
+        document.body.addEventListener("mouseleave", handleMouseUp);
+        document.body.classList.add("isdragging");
+    }
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms  ));
+    }
 
     async function handleMouseMove(event) {
+        if(cooldown_up||cooldown_direction)return;
         if (mousePressed) {
             endY = event.clientY;
             if (endY < startY) {
@@ -57,14 +70,22 @@
             }
 
             if (direction != "" && last_direction != direction) {
-                // if (direction == "down") {
-                //     await scroll_y.set(0, { duration: 100 });
-                // } else {
-                //     await scroll_y.set(
-                //         content.scrollHeight - content.offsetHeight,
-                //         { duration: 100 }
-                //     );
-                // }
+            
+                if(first_down == false){
+                  
+                    cooldown_direction = true;
+                    scroll_y = tweened($scroll_y);
+                    if (direction == "down") {
+                        scroll_y.set(0, { duration:70 }) 
+                    } else {
+                        scroll_y.set( content.scrollHeight - content.offsetHeight,{ duration: 70 } ) 
+                    }
+                    await sleep(70);
+                    cooldown_direction = false;
+                    if(!mousePressed|| cooldown_up)return;
+               
+                }
+                first_down =false;
                 if (prev) {
                     prev.$destroy();
                     prev = undefined;
@@ -88,8 +109,9 @@
 
                     scroll_y = tweened(0);
                 }
-                 
+               
             }
+          
             const maxScrollTop = content.scrollHeight - content.offsetHeight;
             var next = (maxScrollTop / max_to_slide) * distance;
 
@@ -104,7 +126,13 @@
         }
     }
 
-    function handleMouseUp(event) {
+    async function handleMouseUp() {
+
+        if(cooldown_up || !mousePressed)return;
+        mousePressed = false;
+        cooldown_up = true;
+        first_down = false;
+        cooldown_direction = false;
         document.body.removeEventListener("mouseup", handleMouseUp);
         document.body.classList.remove("isdragging");
         const maxScrollTop = content.scrollHeight - content.offsetHeight;
@@ -112,7 +140,7 @@
         target.main.scrollIntoView({ behavior: "smooth", block: "center" });
         if (direction == "up") {
             if (distance < min_to_slide) {
-                scroll_y.set(0, { duration: 500 }).then(() => {
+                await scroll_y.set(0, { duration: anchor_smooth }).then(() => {
                     if (prev) {
                         target.$destroy();
                         target = prev;
@@ -120,7 +148,7 @@
                     }
                 });
             } else {
-                scroll_y.set(maxScrollTop, { duration: 500 }).then(() => {
+                await scroll_y.set(maxScrollTop, { duration: anchor_smooth }).then(() => {
                     if (prev) {
                         prev.$destroy();
                         prev = undefined;
@@ -129,7 +157,7 @@
             }
         } else {
             if (distance < min_to_slide) {
-                scroll_y.set(maxScrollTop, { duration: 500 }).then(() => {
+                await scroll_y.set(maxScrollTop, { duration: anchor_smooth }).then(() => {
                     if (prev) {
                         target.$destroy();
                         target = prev;
@@ -137,7 +165,7 @@
                     }
                 });
             } else {
-                scroll_y.set(0, { duration: 500 }).then(() => {
+                await scroll_y.set(0, { duration: anchor_smooth }).then(() => {
                     if (prev) {
                         prev.$destroy();
                         prev = undefined;
@@ -146,10 +174,11 @@
             }
         }
 
-        mousePressed = false;
+    
         direction = "";
         last_direction = "";
         distance = 0;
+        cooldown_up = false;
     }
 
     $: if (content) content.scrollTop = $scroll_y;
@@ -166,6 +195,6 @@
             bind:this={content}
             class="spt-flex-grow spt-relative spt-overflow-hidden spt-w-full"
         />
-        <div class="spt-w-[359px] spt-bg-[#E6E6E6]" />
+        <!-- <div class="spt-w-[359px] spt-bg-[#E6E6E6]" /> -->
     </div>
 </div>

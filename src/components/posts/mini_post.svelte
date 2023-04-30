@@ -36,12 +36,12 @@
         class="spt-relative spt-w-full spt-h-full spt-overflow-hidden spt-flex spt-justify-center spt-items-center spt-rounded-[15px]"
     >
         <div
-            class="spt-absolute spt-grow-0 spt-shrink-0 spt-w-[110%] spt-max-w-[110%] spt-h-[110%] spt-blur-[10px]"
+            class="spt-absolute spt-grow-0 spt-shrink-0 spt-w-full spt-h-full"
             style="background: conic-gradient(from 224.85deg at 75.71% 23.9%, #967CE0 -106.88deg, #B8B8B8 31.88deg, #C68FF3 153.75deg, #967CE0 253.13deg, #B8B8B8 391.87deg);"
         />
         <div
            
-            class="spt-absolute spt-grow-0 spt-shrink-0 spt-w-[110%] spt-max-w-[110%] spt-h-[110%]  spt-bg-black/25"
+            class="spt-absolute spt-grow-0 spt-shrink-0 spt-w-full spt-h-full spt-backdrop-blur-[45px] spt-bg-black/[0.45]"
         />
  
 

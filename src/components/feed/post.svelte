@@ -5,12 +5,12 @@
 </script>
 <div bind:this={main} class="spt-w-full spt-h-full spt-overflow-hidden spt-relative  spt-flex spt-justify-center spt-items-center">
     <div
-        class="spt-absolute spt-select-none spt-grow-0 spt-shrink-0 spt-w-[110%] spt-max-w-[110%] spt-h-[110%] spt-blur-[10px]"
+        class="spt-absolute spt-select-none spt-grow-0 spt-shrink-0 spt-w-full spt-h-full  "
         style="background: conic-gradient(from 224.85deg at 75.71% 23.9%, #E7E7E7 -106.88deg, #EABDFF 31.88deg, #FFB0F2 153.75deg, #E7E7E7 253.13deg, #EABDFF 391.87deg);"
     />
     <div
     
-        class="spt-absolute spt-select-none spt-grow-0 spt-shrink-0 spt-w-[110%] spt-max-w-[110%] spt-h-[110%]  spt-bg-black/25"
+        class="spt-absolute spt-select-none  spt-grow-0 spt-shrink-0 spt-w-full spt-h-full spt-backdrop-filter spt-backdrop-blur-[45px]   spt-bg-black/[0.15]"
     />
     <p class="spt-absolute spt-pointer-events-none   spt-select-none spt-w-[440px] spt-h-[390px] {test? 'spt-text-red-300' : 'spt-text-black'} spt-text-[18px] spt-font-semibold spt-flex spt-items-center spt-justify-center">
         Приглашаю вас на долгожданное торжество в честь открытия нового проекта Дом Искусств х ТФ Искусств!
