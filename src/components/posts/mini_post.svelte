@@ -7,7 +7,8 @@
     export var image = "";
     export var text = "";
     export var minecraftuuid = "X-Steve";
-
+    export var nickname = "X-Steve";
+    
     var json = undefined;
     try {
         json = JSON.parse(text);
@@ -126,7 +127,7 @@
         </div>
     
         <div
-            class="spt-absolute spt-rounded-[12px] spt-left-[17px] spt-top-[15px] spt-pr-[9px] spt-pl-[9px] spt-pb-[7px] spt-pt-[7px] spt-bg-black/30"
+            class="spt-absolute spt-flex spt-flex-row spt-space-x-[11px] spt-items-center spt-rounded-[12px] spt-left-[17px] spt-top-[15px] spt-pr-[12px] spt-pl-[12px] spt-pb-[7px] spt-pt-[7px] spt-bg-black/40"
         >
             <img
                 draggable="false"
@@ -135,6 +136,7 @@
                 height="54"
                 width="54"
             />
+            <p class="spt-text-[16px] spt-font-bold">{nickname}</p>
         </div>
     </div>
 </div>

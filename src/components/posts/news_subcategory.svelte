@@ -88,6 +88,7 @@
                 downvotes={post.downvotes}
                 image={post.image != undefined? 'https://storage.yandexcloud.net/spworlds/images/posts/'+post.image +'.webp':''}
                 text={post.text}
+                nickname={post.username}
                 minecraftuuid={post.minecraftUUID}
             />
         {/each}
