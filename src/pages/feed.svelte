@@ -4,23 +4,32 @@
     import { writable } from "svelte/store";
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import {getbuffer, setbuffer ,http_spworlds} from "/src/stores/main.js"
+
     import { onMount } from "svelte";
     import Post from "../components/feed/post.svelte";
     import { identity } from "svelte/internal";
     export var page_title = writable("Лента");
     export var save_properties = {};
     document.title = "СП Лента";
+
+    var posts = []
+    var currect = 0
+
+
     var content;
     var target;
  
-    var min_to_slide =100;
+    var min_to_slide =200;
     var max_to_slide = 400;
     var slide_smooth = 100;
-    var anchor_smooth = 200;
+    var anchor_smooth = 300;
 
     var scroll_y = tweened(0);
 
-    onMount(() => {
+    onMount(async () => {
+        posts = await $getbuffer("popular_posts")
+        console.log(posts)
         target = new Post({ target: content });
     });
 
@@ -70,7 +79,7 @@
             }
 
             if (direction != "" && last_direction != direction) {
-            
+                
                 if(first_down == false){
                   
                     cooldown_direction = true;
@@ -91,20 +100,25 @@
                     prev = undefined;
                 }
                 prev = target;
-                prev.test = false;
+                prev.next = false;
                 if (direction == "down") {
+                    const currect_post = posts[currect-1];
+                   
                     target = new Post({
                         target: content,
                         anchor: prev.main,
-                        props: { test: true },
+                        props: { next: true,content:currect_post.text },
+                        
                     });
                     scroll_y = tweened(
                         content.scrollHeight - content.offsetHeight
                     );
                 } else {
+                   
+                    const currect_post = posts[currect+1];
                     target = new Post({
                         target: content,
-                        props: { test: true },
+                        props: { next: true,content:currect_post.text },
                     });
 
                     scroll_y = tweened(0);
@@ -136,9 +150,11 @@
         document.body.removeEventListener("mouseup", handleMouseUp);
         document.body.classList.remove("isdragging");
         const maxScrollTop = content.scrollHeight - content.offsetHeight;
-        target.test = false;
+        target.next = false;
         target.main.scrollIntoView({ behavior: "smooth", block: "center" });
+        
         if (direction == "up") {
+
             if (distance < min_to_slide) {
                 await scroll_y.set(0, { duration: anchor_smooth }).then(() => {
                     if (prev) {
@@ -148,16 +164,20 @@
                     }
                 });
             } else {
+          
                 await scroll_y.set(maxScrollTop, { duration: anchor_smooth }).then(() => {
                     if (prev) {
+                        currect +=1;
                         prev.$destroy();
                         prev = undefined;
                     }
                 });
             }
         } else {
+         
             if (distance < min_to_slide) {
                 await scroll_y.set(maxScrollTop, { duration: anchor_smooth }).then(() => {
+                    
                     if (prev) {
                         target.$destroy();
                         target = prev;
@@ -165,8 +185,11 @@
                     }
                 });
             } else {
+           
                 await scroll_y.set(0, { duration: anchor_smooth }).then(() => {
+                    
                     if (prev) {
+                        currect -=1
                         prev.$destroy();
                         prev = undefined;
                     }
