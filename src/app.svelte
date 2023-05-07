@@ -62,6 +62,8 @@
             
             
         </div>
-        
+        <div class="spt-pr-[25px] spt-pl-[25px] spt-pb-[5px] spt-pt-[5px] ">
+            <p class="spt-text-[14px] spt-font-bold spt-text-white/[0.45]">Для Навигации</p>
+        </div>
     </div>
 </div>
