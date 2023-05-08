@@ -3,21 +3,43 @@
     import { isdragging } from '/src/stores/main.js';
     import VoteButtons from "../actions/vote_buttons.svelte";
 
-    export var image = "";
-    export var text = "";
-    export var minecraftuuid = "X-Steve";
-    export var nickname = "X-Steve";
+    var image = "";
+    var text = "";
+    var minecraftuuid = "X-Steve";
+    var nickname = "X-Steve";
+    var upvotes = 1;
+    var downvotes = 1;
+
+
+    export var post;
+
+    if(post){
+        text = post.text;
+        minecraftuuid = post.account.user.minecraftUUID;
+        
+        if (post.image)
+            image =
+                "https://storage.yandexcloud.net/spworlds/images/posts/" +
+                post.image +
+                ".webp";
+        nickname = post.account.user.username;
+        let downvotes_count = 0;
+        let upvotes_count = 0;
+        if(post.votes != undefined){
+            for(let i = 0; i <post.votes.length; i++){
+                if(post.votes[i].isUpvote ==false)downvotes_count +=1; else{upvotes_count += 1;}
+            }
+        }
+        upvotes = upvotes_count;
+        downvotes = downvotes_count; 
+    }
 
     var json = undefined;
     try {
         json = JSON.parse(text);
     } catch (e) {}
-
-    export var upvotes = 1;
-    export var downvotes = 1;
  
-    export var index = 0;
-    export var post_id = "";
+  
 
     var hover_text_bar = false;
     var can_interact = false;
@@ -34,6 +56,8 @@
 
 </script>
 
+<!-- svelte-ignore a11y-missing-attribute -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class=" spt-shrink-0  spt-w-[745px] spt-h-[540px]"  >
     <div
         class="spt-relative spt-w-full spt-h-full spt-overflow-hidden spt-flex spt-justify-center spt-items-center spt-rounded-[15px]"
@@ -49,6 +73,7 @@
         />
         
         {#if image != ""}
+            
             <img
                 src={image}
                 draggable="false"
@@ -86,7 +111,8 @@
 
       
         {/if}
-        <div    on:click={()=>{if(!can_interact)return; next_page("feed"); }} class="spt-absolute spt-w-full spt-h-full spt-cursor-pointer" />
+        
+        <div on:click={()=>{if(!can_interact)return; next_page("feed"); }} class="spt-absolute spt-w-full spt-h-full spt-cursor-pointer" />
         <div class="spt-absolute spt-transition-all spt-duration-300 {hover_text_bar? '!spt-h-[90%]' : 'spt-h-[113px] '} spt-bottom-[19px] spt-left-[17px] spt-flex spt-items-end spt-flex-row spt-space-x-[10px]"  >
 
             
@@ -99,6 +125,7 @@
                    
                     class="spt-flex spt-rounded-[15px] spt-w-[408px] spt-backdrop-blur-sm spt-h-full  spt-bg-black/80 spt-pr-[25px] spt-pl-[25px] spt-pb-[15px] spt-pt-[15px]" 
                 >
+
                     <div class="spt-grow spt-h-full spt-overflow-hidden spt-flex spt-justify-center spt-flex-col">
                         <div class="spt-h-fit  spt-max-h-full">
                             {#if json != undefined}
@@ -131,6 +158,7 @@
         <div
             class="spt-absolute spt-flex spt-flex-row spt-space-x-[11px] spt-items-center spt-rounded-[12px] spt-left-[17px] spt-top-[15px] spt-pr-[12px] spt-pl-[12px] spt-pb-[7px] spt-pt-[7px] spt-bg-black/40"
         >
+            
             <img
                 draggable="false"
                 class="spt-rounded-[12px] spt-select-none"
@@ -138,6 +166,7 @@
                 height="54"
                 width="54"
             />
+
             <p class="spt-text-[16px] spt-font-bold">{nickname}</p>
         </div>
     </div>

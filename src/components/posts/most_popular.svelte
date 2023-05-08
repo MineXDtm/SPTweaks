@@ -1,5 +1,5 @@
-<script>
-    import MiniPost from "./mini_post.svelte";
+<script> 
+ 
     import browser, { action } from "webextension-polyfill";
 
     import { isdragging } from '/src/stores/main.js';
@@ -7,14 +7,14 @@
 
  
     export var posts = [];
-
+    $:console.log(posts)
     let startX = 0;
     let startScrollLeft = 0;
     let lastScrollLeft = 0;
     let speed = 0;
     let rafId = null;
     var scollable = undefined;
-  
+    
     var ismoved = false;
 
     function handleMouseDown(event) {
@@ -22,8 +22,7 @@
         startScrollLeft = scollable.scrollLeft;
         document.getSelection().removeAllRanges();
         window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("mouseup", handleMouseUp);
-
+        window.addEventListener("mouseup", handleMouseUp); 
     }
 
     function handleMouseMove(event) {
@@ -81,18 +80,12 @@
  
         class="spt-inline-flex spt-overflow-hidden spt-space-x-[25px] spt-w-full spt-grow spt-pr-[15px] spt-pl-[15px] spt-pt-[25px] spt-pb-[25px]"
     >
-        {#each posts as  post}
-            <PopularPost
-                upvotes={post.upvotes}
-                downvotes={post.downvotes}
-                image={post.image != undefined? 'https://storage.yandexcloud.net/spworlds/images/posts/'+post.image +'.webp':''}
-                text={post.text}
-                nickname={post.username}
-                minecraftuuid={post.minecraftUUID}
-            />
-        {/each}
-
- 
- 
+        {#each posts as post}
+            {#if post.account != undefined}
+                <PopularPost
+                    {post}
+                />
+            {/if}
+        {/each}  
     </div>
 </div>

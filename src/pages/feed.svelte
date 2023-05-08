@@ -45,11 +45,57 @@
     let distance = 0;
     var prev = undefined;
     var currect = undefined;
+
     var last_distance = -1;
     var last_direction = "";
     var cooldown_up = false;
     var cooldown_direction = false;
     var first_down = false;
+    var comments_scroll;
+    var comment_list;
+    function setcomments(comments) {
+        console.log(comments)
+        comment_list.innerHTML = "";
+        for (let index = 0; index < comments.length; index++) {
+            const comment = comments[index];
+
+            const commnet_element = new Comment({
+                target: comment_list,
+                props: { comment },
+            });
+        }
+    }
+    $:  {
+        if (currect && currect.post && currect.post.comments) {
+            (async ()=>{
+                
+                await setcomments(currect.post.comments)
+                return;
+                if (comments_scroll) {
+                    comments_scroll.scrollTop =
+                        comments_scroll.scrollHeight - comments_scroll.offsetHeight;
+                }
+                var currect_post_data = $http_spworlds(
+                    "https://spworlds.ru/api/sp/posts" + currect.post.id
+                ); 
+                await setcomments(currect_post_data.commnets);
+            })()
+        }
+    }
+
+    // function update_comments() {
+    //     setTimeout(() => {
+    //         currect_comments = [...currect.post.comments];
+
+    //         setTimeout(() => {
+
+    //             if (comment_list) {
+    //                 comment_list.scrollTop =
+    //                     comment_list.scrollHeight - comment_list.offsetHeight;
+    //             }
+    //         }, 100);
+    //     }, 100);
+    // }
 
     function handleMouseDown(event) {
         if (cooldown_up || cooldown_direction || (currect && !currect.candrag))
@@ -243,27 +289,19 @@
                 class="spt-h-full spt-w-full spt-flex spt-flex-col spt-space-y-[15px] spt-pr-[10px] spt-pl-[10px] spt-pb-[10px] spt-pt-[10px]"
             >
                 <div
-                    class="spt-grow spt-overflow-auto spt-relative  spt-space-y-[10px] spt-flex "
+                    bind:this={comments_scroll}
+                    class="spt-grow spt-w-full spt-overflow-auto spt-relative spt-space-y-[10px] spt-flex spt-flex-col spt-justify-end"
                 >
-                     <div class="spt-absolute spt-h-full spt-space-y-[10px] spt-flex spt-flex-col spt-items-end ">
-                        <Comment />
-                        <Comment />
-                        <Comment />
-                        <Comment />
-                        <Comment />
-                        <Comment />
-                        <Comment />
-                        <Comment />
-                     </div>
+                    <div
+                        bind:this={comment_list}
+                        class="spt-absolute spt-w-full spt-max-h-full spt-space-y-[10px] spt-flex spt-flex-col spt-items-end"
+                    />
                 </div>
                 <div class="spt-grow-0 spt-shrink-0 spt-h-[130px]">
                     <div
-                        
                         class="spt-w-full spt-h-full spt-flex spt-bg-[#EEEEEE] spt-rounded-[5px] spt-overflow-hidden spt-space-y-[15px] spt-pr-[10px] spt-pl-[10px] spt-pb-[10px] spt-pt-[10px] spt-text-black spt-font-semibold"
                     >
-                        <div contenteditable class="spt-grow">
-
-                        </div>
+                        <div contenteditable class="spt-grow" />
                     </div>
                 </div>
             </div>

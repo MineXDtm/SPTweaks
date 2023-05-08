@@ -9,18 +9,19 @@
     var image = "";
     var post_date = "";
     export var post;
+    
     export var candrag = true;
-
-    if (post) {
+    if (post && post.account != undefined) {
+        
         content = post.text;
-        minecraftuuid = post.minecraftUUID;
+        minecraftuuid = post.account.user.minecraftUUID;
 
         if (post.image)
             image =
                 "https://storage.yandexcloud.net/spworlds/images/posts/" +
                 post.image +
                 ".webp";
-        nickname = post.username;
+        nickname = post.account.user.username;
         post_date = post.createdAt;
     }
     var json = undefined;
@@ -30,8 +31,9 @@
     var descriptionlength = 0;
     var can_show_more_info = false;
     var more_info = false;
+
     $:can_show_more_info = descriptionlength > 25;
-  
+    
     
 </script>
 

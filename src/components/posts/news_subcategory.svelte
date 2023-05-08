@@ -6,7 +6,6 @@
 
     export var name = "Рекомендации";
     export var posts = [];
-
     let startX = 0;
     let startScrollLeft = 0;
     let lastScrollLeft = 0;
@@ -83,14 +82,12 @@
         class="spt-inline-flex spt-overflow-hidden spt-space-x-[25px] spt-w-full spt-grow spt-pr-[15px] spt-pl-[15px] spt-pt-[25px] spt-pb-[25px]"
     >
         {#each posts as  post}
-            <MiniPost
-                upvotes={post.upvotes}
-                downvotes={post.downvotes}
-                image={post.image != undefined? 'https://storage.yandexcloud.net/spworlds/images/posts/'+post.image +'.webp':''}
-                text={post.text}
-                nickname={post.username}
-                minecraftuuid={post.minecraftUUID}
-            />
+            {#if post.account != undefined}
+                <MiniPost
+                    {post}
+                />
+            {/if}
+           
         {/each}
 
  

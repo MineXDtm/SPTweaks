@@ -4,19 +4,39 @@
     import {  next_page } from "/src/stores/categories.js";
     import VoteButtons from "../actions/vote_buttons.svelte";
 
-    export var image = "";
-    export var text = "";
-    export var minecraftuuid = "X-Steve";
-    export var nickname = "X-Steve";
-    
+    var image = "";
+    var text = "";
+    var minecraftuuid = "X-Steve";
+    var nickname = "X-Steve";
+    var upvotes = 1;
+    var downvotes = 1;
+    export var post;
+
+    if(post){
+        text = post.text;
+        minecraftuuid = post.account.user.minecraftUUID;
+        
+        if (post.image)
+            image =
+                "https://storage.yandexcloud.net/spworlds/images/posts/" +
+                post.image +
+                ".webp";
+        nickname = post.account.user.username;
+        let downvotes_count = 0;
+        let upvotes_count = 0;
+        if(post.votes != undefined){
+            for(let i = 0; i <post.votes.length; i++){
+                if(post.votes[i].isUpvote ==false)downvotes_count +=1; else{upvotes_count += 1;}
+            }
+        }
+        upvotes = upvotes_count;
+        downvotes = downvotes_count; 
+    }
     var json = undefined;
     try {
         json = JSON.parse(text);
     } catch (e) {}
 
-    export var upvotes = 1;
-    export var downvotes = 1;
- 
 
     var hover_text_bar = false;
     var can_interact = false;

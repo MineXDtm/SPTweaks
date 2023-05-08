@@ -27,6 +27,7 @@
             var request_popular_posts = await $http_spworlds(
                 "https://spworlds.ru/api/sp/posts?sort=popular&source=all&p=1"
             );
+ 
             if (request_popular_posts == undefined) return;
             popular_posts = request_popular_posts;
             $setbuffer("popular_posts", request_popular_posts);
@@ -37,6 +38,7 @@
             var request_new_posts = await $http_spworlds(
                 "https://spworlds.ru/api/sp/posts?sort=new&source=all&p=1"
             );
+            
             if (request_new_posts == undefined) return;
 
             new_posts = request_new_posts;
