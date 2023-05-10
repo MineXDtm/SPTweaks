@@ -9,10 +9,9 @@
     var image = "";
     var post_date = "";
     export var post;
-    
+
     export var candrag = true;
     if (post && post.account != undefined) {
-        
         content = post.text;
         minecraftuuid = post.account.user.minecraftUUID;
 
@@ -28,13 +27,23 @@
     try {
         json = JSON.parse(content);
     } catch (e) {}
+    var textlength = 0;
+    if (json != undefined) {
+        json.content.forEach((node) => {
+            if (node.type === "paragraph" && node.content != undefined) {
+                node.content.forEach((textNode) => {
+                    textlength += textNode.text.length;
+                });
+            }
+        });
+    } else {
+        textlength += content.length;
+    } 
     var descriptionlength = 0;
     var can_show_more_info = false;
     var more_info = false;
 
-    $:can_show_more_info = descriptionlength > 25;
-    
-    
+    $: can_show_more_info = descriptionlength > 25;
 </script>
 
 <div
@@ -66,7 +75,36 @@
         />
     {:else}
         <div
-            class="spt-absolute spt-flex spt-justify-center spt-flex-col spt-w-fit spt-max-w-[440px] spt-h-[390px] spt-transition-opacity spt-duration-300 {next
+            class="spt-absolute spt-left-5 spt-top-52 spt-flex spt-justify-center spt-flex-col spt-w-[976px] spt-h-fit spt-transition-opacity spt-duration-300 {next
+                ? 'spt-opacity-25'
+                : 'spt-opacity-100'}"
+        >
+            {#if json != undefined}
+                {#each json.content as node}
+                        <p class="spt-pointer-events-none spt-select-none spt-text-black spt-text-[96px] spt-font-black spt-opacity-[0.02]" > 
+                            {#if node.content != undefined}
+                                {#each node.content as textNode}
+                                    {textNode.text}
+                                {/each}
+                            {/if}
+                        </p>
+                {/each}
+            {:else}
+                <p
+                    class="spt-pointer-events-none spt-select-none spt-text-black spt-text-[96px] spt-font-black spt-opacity-[0.02]  ">
+                    {content}
+                </p>
+            {/if}
+        </div>
+        <div
+            on:mouseenter={() => {
+                candrag = false;
+                console.log("Test")
+            }}
+            on:mouseleave={() => {
+                candrag = true;
+            }}
+            class="spt-absolute spt-flex spt-justify-center spt-flex-col spt-w-fit spt-max-w-[440px] spt-overflow-auto spt-h-fit spt-max-h-[390px] spt-transition-opacity spt-duration-300 {next
                 ? 'spt-opacity-25'
                 : 'spt-opacity-100'}"
         >
@@ -74,7 +112,10 @@
                 {#each json.content as node}
                     {#if node.type === "paragraph"}
                         <p
-                            class="spt-pointer-events-none spt-select-none spt-text-black spt-text-[18px] spt-font-semibold"
+                            class="spt-pointer-events-none spt-select-none spt-text-black {textlength >
+                            30
+                                ? 'spt-text-[16px] spt-font-semibold'
+                                : 'spt-text-[20px] spt-font-bold'} "
                         >
                             {#if node.content != undefined}
                                 {#each node.content as textNode}
@@ -86,25 +127,32 @@
                 {/each}
             {:else}
                 <p
-                    class="spt-pointer-events-none spt-select-none spt-text-black spt-text-[18px] spt-font-semibold"
+                    class="spt-pointer-events-none spt-select-none spt-text-black {textlength >
+                    30
+                        ? 'spt-text-[16px] spt-font-semibold'
+                        : 'spt-text-[20px] spt-font-bold'} spt-font-semibold"
                 >
                     {content}
                 </p>
             {/if}
         </div>
+        
     {/if}
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
-        class="spt-absolute spt-w-full spt-h-full spt-flex spt-flex-row spt-space-x-[10px] spt-pr-[15px] spt-pl-[15px] spt-pb-[15px] spt-pt-[15px]"
+        class="spt- spt-select-none spt-w-full spt-h-full spt-flex spt-flex-row spt-space-x-[10px] spt-pr-[15px] spt-pl-[15px] spt-pb-[15px] spt-pt-[15px]"
     >
         <div
             class="spt-flex-grow spt-flex spt-flex-row spt-space-x-[10px] spt-h-fit"
         >
             <div
-                on:mouseenter={()=>{candrag = false;}}
-                on:mouseleave={()=>{candrag = true;}}
-                
+                on:mouseenter={() => {
+                    candrag = false;
+                }}
+                on:mouseleave={() => {
+                    candrag = true;
+                }}
                 class="spt-max-w-[460px] spt-flex spt-flex-row spt-w-fit spt-h-fit spt-rounded-[15px] spt-bg-black/[0.65] spt-backdrop-blur-[15px] spt-space-x-[15px] spt-pt-[15px] spt-pb-[15px] spt-pr-[25px] spt-pl-[25px]"
             >
                 <div
@@ -122,13 +170,12 @@
                         />
                         <p class="spt-text-[14px] spt-font-bold">{nickname}</p>
                     </div>
-                    <div 
-                
-                        class="{more_info? 'spt-max-h-[90%]':'spt-max-h-[25px]'}   spt-overflow-hidden"
+                    <div
+                        class="{more_info
+                            ? 'spt-max-h-[90%]'
+                            : 'spt-max-h-[25px]'}   spt-overflow-hidden"
                     >
-                        <div bind:clientHeight={descriptionlength}
-                        
-                        >
+                        <div bind:clientHeight={descriptionlength}>
                             {#if json != undefined}
                                 {#each json.content as node}
                                     {#if node.type === "paragraph"}
@@ -157,10 +204,16 @@
                     </p>
                 </div>
                 {#if can_show_more_info}
-                    <div  on:click={()=>{if(can_show_more_info)more_info = !more_info}} class="spt-grow spt-flex spt-flex-row  spt-items-end spt-cursor-pointer ">
+                    <div
+                        on:click={() => {
+                            if (can_show_more_info) more_info = !more_info;
+                        }}
+                        class="spt-grow spt-flex spt-flex-row spt-items-end spt-cursor-pointer"
+                    >
                         <svg
-                           
-                            class="spt-grow-0 spt-shrink-0 spt-transition-transform {more_info? '-spt-rotate-90': ''}"
+                            class="spt-grow-0 spt-shrink-0 spt-transition-transform {more_info
+                                ? '-spt-rotate-90'
+                                : ''}"
                             width="17"
                             height="17"
                             viewBox="0 0 17 18"

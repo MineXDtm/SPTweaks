@@ -1,8 +1,7 @@
 <svelte:options accessors={true}/>
 <script>
     import { writable } from 'svelte/store';
-
-    import browser from "webextension-polyfill";
+ 
     document.title = "СП Посты";
     import {getbuffer, setbuffer ,http_spworlds} from "/src/stores/main.js"
 

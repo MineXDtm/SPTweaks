@@ -54,7 +54,7 @@
     var comments_scroll;
     var comment_list;
     function setcomments(comments) {
-        console.log(comments)
+ 
         comment_list.innerHTML = "";
         for (let index = 0; index < comments.length; index++) {
             const comment = comments[index];
@@ -64,21 +64,18 @@
                 props: { comment },
             });
         }
+        if (comments_scroll) comments_scroll.scrollTop =comments_scroll.scrollHeight - comments_scroll.offsetHeight;
     }
     $:  {
         if (currect && currect.post && currect.post.comments) {
             (async ()=>{
                 
                 await setcomments(currect.post.comments)
-                return;
-                if (comments_scroll) {
-                    comments_scroll.scrollTop =
-                        comments_scroll.scrollHeight - comments_scroll.offsetHeight;
-                }
-                var currect_post_data = $http_spworlds(
-                    "https://spworlds.ru/api/sp/posts" + currect.post.id
-                ); 
-                await setcomments(currect_post_data.commnets);
+ 
+                var currect_post_data = await $http_spworlds(
+                    "https://spworlds.ru/api/sp/posts/" + currect.post.id
+                );   
+                await setcomments(currect_post_data.comments);
             })()
         }
     }

@@ -23,15 +23,9 @@
                 post.image +
                 ".webp";
         nickname = post.account.user.username;
-        let downvotes_count = 0;
-        let upvotes_count = 0;
-        if(post.votes != undefined){
-            for(let i = 0; i <post.votes.length; i++){
-                if(post.votes[i].isUpvote ==false)downvotes_count +=1; else{upvotes_count += 1;}
-            }
-        }
-        upvotes = upvotes_count;
-        downvotes = downvotes_count; 
+       
+        upvotes = post.upvotes;
+        downvotes = post.downvotes;
     }
 
     var json = undefined;
